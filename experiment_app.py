@@ -1,0 +1,617 @@
+import streamlit as st
+import random
+import time
+
+import gspread
+from google.oauth2.service_account import Credentials
+
+# ===============================
+# Google Sheets 接続
+# ===============================
+scope = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"
+]
+
+creds = Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"],
+    scopes=scope
+)
+
+gc = gspread.authorize(creds)
+
+# スプレッドシート名
+SPREADSHEET_NAME = "気分入力実験データ"
+
+sh = gc.open(SPREADSHEET_NAME)
+ws = sh.sheet1
+def append_row(data):
+    ws.append_row(data, value_input_option="USER_ENTERED")
+
+# ===============================
+# 母音抽出・マッチ・ソート（kai.py 準拠）
+# ===============================
+
+def extract_vowels(word):
+    vowels = "aiueo"
+    result = []
+    i = 0
+    while i < len(word):
+        if word[i] == "n":
+            count = 1
+            while i + count < len(word) and word[i + count] == "n":
+                count += 1
+            result.append("u" * (count // 2))
+            i += count
+            continue
+
+        if word[i] == "-":
+            result.append(result[-1] if result else "")
+            i += 1
+            continue
+
+        if word[i] in vowels:
+            result.append(word[i])
+
+        i += 1
+    return "".join(result)
+
+
+def is_chouon_word(romaji):
+    return "-" in romaji
+
+
+def match_pattern(word_vowels, input_pattern, romaji_word):
+    if not input_pattern:
+        return False
+
+    chouon = is_chouon_word(romaji_word)
+    wl = len(word_vowels)
+    il = len(input_pattern)
+
+    # 長音語：±1許容
+    if chouon:
+        if abs(wl - il) > 1:
+            return False
+        min_len = min(wl, il)
+        w_cut = word_vowels[:min_len]
+        i_cut = input_pattern[:min_len]
+
+    # 非長音語
+    else:
+        if il > wl:
+            return False
+        w_cut = word_vowels[:il]
+        i_cut = input_pattern
+
+    for w, i in zip(w_cut, i_cut):
+        if i == "u":
+            if w not in ["u", "n"]:
+                return False
+        else:
+            if w != i:
+                return False
+
+    return True
+
+
+def sort_key(item, input_vowels):
+    r, j, vowels = item
+    wl = len(vowels)
+    il = len(input_vowels)
+    chouon = "-" in r
+
+    if vowels == input_vowels:
+        return (0, abs(wl - il))
+    if wl == il:
+        return (1, abs(wl - il))
+    if chouon and abs(wl - il) == 1:
+        return (2, abs(wl - il))
+    return (3, abs(wl - il))
+
+# ===============================
+# 辞書読み込み（romaji_words.txt）
+# ===============================
+def load_dict():
+    word_dict = {}
+    with open("romaji_words.txt", encoding="utf-8") as f:
+        for line in f:
+            r, j = line.strip().split(",")
+            word_dict[r] = j
+    return word_dict
+
+def extract_vowels(word):
+    vowels = "aiueo"
+    result = []
+    i = 0
+    while i < len(word):
+        if word[i] == "n":
+            count = 1
+            while i + count < len(word) and word[i + count] == "n":
+                count += 1
+            result.append("u" * (count // 2))
+            i += count
+            continue
+        if word[i] == "-":
+            result.append(result[-1] if result else "")
+            i += 1
+            continue
+        if word[i] in vowels:
+            result.append(word[i])
+        i += 1
+    return "".join(result)
+
+def is_chouon_word(romaji):
+    return "-" in romaji
+
+def match_pattern(word_vowels, input_pattern, romaji_word):
+    if not input_pattern:
+        return False   # ← 何も押していない時は候補を出さない
+
+
+    chouon = is_chouon_word(romaji_word)
+    wl, il = len(word_vowels), len(input_pattern)
+
+    if chouon:
+        if abs(wl - il) > 1:
+            return False
+        w_cut = word_vowels[:min(wl, il)]
+        i_cut = input_pattern[:min(wl, il)]
+    else:
+        if il > wl:
+            return False
+        w_cut = word_vowels[:il]
+        i_cut = input_pattern
+
+    for w, i in zip(w_cut, i_cut):
+        if i == "u":
+            if w not in ["u", "n"]:
+                return False
+        else:
+            if w != i:
+                return False
+    return True
+
+word_dict = load_dict()
+
+
+# ===============================
+# session_state 初期化
+# ===============================
+if "phase" not in st.session_state:
+    st.session_state.phase = "id_input"
+
+if "experiment_id" not in st.session_state:
+    st.session_state.experiment_id = ""
+
+# ---------- 味覚 ----------
+for key, default in {
+    "taste_list": [],
+    "taste_index": 0,
+    "taste_result": None,
+    "taste_free_text": "",
+    "taste_time_start": None,
+    "taste_time_end": None,
+    "taste_steps": 0,
+}.items():
+    if key not in st.session_state:
+        st.session_state[key] = default
+
+# ---------- 母音（味覚） ----------
+for key, default in {
+    "input_vowels": "",
+    "vowel_result": None,
+    "vowel_free_text": "",
+    "vowel_time_start": None,
+    "vowel_time_end": None,
+    "vowel_steps": 0,
+    "vowel_deletes": 0,
+}.items():
+    if key not in st.session_state:
+        st.session_state[key] = default
+
+# ---------- 体調 YES/NO ----------
+for key, default in {
+    "body_list": [],
+    "body_index": 0,
+    "body_yesno_result": None,
+    "body_yesno_time_start": None,
+    "body_yesno_time_end": None,
+    "body_yesno_free_text": "",
+}.items():
+    if key not in st.session_state:
+        st.session_state[key] = default
+
+# ---------- 体調 母音 ----------
+for key, default in {
+    "body_input_vowels": "",
+    "body_vowel_result": None,
+    "body_vowel_free_text": "",
+    "body_vowel_time_start": None,
+    "body_vowel_time_end": None,
+    "body_vowel_steps": 0,
+    "body_vowel_deletes": 0,
+}.items():
+    if key not in st.session_state:
+        st.session_state[key] = default
+if "vowel_active" not in st.session_state:
+    st.session_state.vowel_active = False
+if "body_vowel_active" not in st.session_state:
+    st.session_state.body_vowel_active = False
+
+
+
+# ===============================
+# 1. ID入力
+# ===============================
+if st.session_state.phase == "id_input":
+    st.title("簡単な気分入力実験")
+    st.session_state.experiment_id = st.text_input("ニックネーム")
+
+    if st.button("開始"):
+        if st.session_state.experiment_id.strip():
+            st.session_state.taste_list = random.sample(
+                ["甘い", "辛い", "酸っぱい", "しょっぱい", "苦い"], 5
+            )
+            st.session_state.taste_index = 0
+            st.session_state.taste_steps = 0
+            st.session_state.taste_time_start = time.time()
+            st.session_state.phase = "taste_checking"
+            st.rerun()
+        else:
+            st.warning("ニックネームを入力してください")
+# ===============================
+# 2. 味覚 YES / NO
+# ===============================
+elif st.session_state.phase == "taste_checking":
+    idx = st.session_state.taste_index
+    tastes = st.session_state.taste_list
+
+    if idx < len(tastes):
+        current = tastes[idx]
+        st.header("今の気分に近いのは？")
+        st.subheader(f"「{current}」のものが食べたい気分ですか？")
+
+        col1, col2 = st.columns(2)
+        if col1.button("YES"):
+            st.session_state.taste_steps += 1
+            st.session_state.taste_result = current
+            st.session_state.taste_time_end = time.time()
+            st.session_state.phase = "save_taste"
+            st.rerun()
+
+        if col2.button("NO"):
+            st.session_state.taste_steps += 1
+            st.session_state.taste_index += 1
+            st.rerun()
+
+    else:
+        st.subheader("どれでもありませんか？")
+        if st.button("どれでもない"):
+            st.session_state.taste_time_end = time.time()
+            st.session_state.phase = "taste_free_input"
+            st.rerun()
+
+# ===============================
+# 3. 味覚 自由入力
+# ===============================
+elif st.session_state.phase == "taste_free_input":
+    st.header("では、どんな気分でしたか？")
+    st.session_state.taste_free_text = st.text_input("自由に入力してください")
+
+    if st.button("決定"):
+        if st.session_state.taste_free_text.strip():
+            st.session_state.phase = "save_taste"
+            st.rerun()
+        else:
+            st.warning("入力してください")
+
+# ===============================
+# 4. 味覚結果 保存
+# ===============================
+elif st.session_state.phase == "save_taste":
+    st.session_state.phase = "vowel_start"
+    st.rerun()
+
+
+# ===============================
+# 5. 味覚 母音入力 開始
+# ===============================
+elif st.session_state.phase == "vowel_start":
+    st.header("次の質問です")
+    st.write("今はどんな味のものが食べたい気分ですか？")
+    st.write("母音（a i u e o）だけで入力してください")
+
+    if st.button("母音入力を始める"):
+        st.session_state.input_vowels = ""
+        st.session_state.vowel_steps = 0
+        st.session_state.vowel_deletes = 0
+        st.session_state.vowel_time_start = time.time()
+        st.session_state.vowel_active = True   # ← ★追加
+        st.session_state.phase = "vowel_input"
+        st.rerun()
+
+
+# ===============================
+# 6. 味覚 母音入力 本体
+# ===============================
+# ===============================
+# 6. 味覚 母音入力 本体（kai.py方式）
+# ===============================
+elif st.session_state.phase == "vowel_input":
+    st.header("母音入力")
+
+    # ---------- 母音ボタン ----------
+    cols = st.columns(5)
+    for i, v in enumerate(["a", "i", "u", "e", "o"]):
+        if cols[i].button(v, key=f"taste_vowel_{v}"):
+            st.session_state.input_vowels += v
+            st.session_state.vowel_steps += 1
+            st.rerun()
+
+    # ---------- 削除 ----------
+    if st.button("⌫ 削除", key="taste_vowel_delete"):
+        if st.session_state.input_vowels:
+            st.session_state.input_vowels = st.session_state.input_vowels[:-1]
+            st.session_state.vowel_deletes += 1
+        st.rerun()
+
+    st.write(f"入力：{st.session_state.input_vowels}")
+
+    # ---------- 候補生成（kai.py 完全準拠） ----------
+    if st.session_state.input_vowels:
+        candidates = []
+
+        for r, j in word_dict.items():
+            v = extract_vowels(r)
+            if match_pattern(v, st.session_state.input_vowels, r):
+                candidates.append((r, j, v))
+
+        # 並び替え（kai.pyと同じ）
+        candidates.sort(
+            key=lambda x: sort_key(x, st.session_state.input_vowels)
+        )
+
+        # ---------- 最大6件だけ表示 ----------
+        for idx, (r, j, v) in enumerate(candidates[:6]):
+            if st.button(
+                j,
+                key=f"taste_vowel_candidate_{idx}_{r}"
+            ):
+                st.session_state.vowel_result = j
+                st.session_state.vowel_time_end = time.time()
+                st.session_state.vowel_active = False
+                st.session_state.phase = "save_vowel"
+                st.rerun()
+
+    st.write("---")
+
+    # ---------- 候補なし ----------
+    if st.button("候補になかった", key="taste_vowel_none"):
+        st.session_state.vowel_time_end = time.time()
+        st.session_state.vowel_active = False
+        st.session_state.phase = "vowel_free_input"
+        st.rerun()
+
+
+
+# ===============================
+# 7. 味覚 母音 自由入力
+# ===============================
+elif st.session_state.phase == "vowel_free_input":
+    st.header("どんな気分でしたか？")
+    st.session_state.vowel_free_text = st.text_input("自由入力")
+
+    if st.button("決定"):
+        if st.session_state.vowel_free_text.strip():
+            st.session_state.phase = "save_vowel"
+            st.rerun()
+        else:
+            st.warning("入力してください")
+
+# ===============================
+# 8. 味覚 母音結果 保存
+# ===============================
+elif st.session_state.phase == "save_vowel":
+
+
+    st.session_state.phase = "body_start"
+    st.rerun()
+# ===============================
+# 9. 体調質問 開始（YES/NO）
+# ===============================
+elif st.session_state.phase == "body_start":
+    st.header("第2問：今、身体はどんな感じですか？")
+
+    if st.button("次へ"):
+        st.session_state.body_list = random.sample(
+            ["だるい", "いたい", "ねむい", "すっきり", "つらい"], 5
+        )
+        st.session_state.body_index = 0
+        st.session_state.body_steps = 0
+        st.session_state.body_yesno_result = None
+        st.session_state.body_yesno_time_start = time.time()
+        st.session_state.phase = "body_yesno_check"
+        st.rerun()
+
+# ===============================
+# 10. 体調 YES / NO 確認
+# ===============================
+elif st.session_state.phase == "body_yesno_check":
+    idx = st.session_state.body_index
+    body_list = st.session_state.body_list
+
+    if idx < len(body_list):
+        current = body_list[idx]
+        st.subheader(f"「{current}」ですか？")
+
+        col1, col2 = st.columns(2)
+        if col1.button("YES"):
+            st.session_state.body_steps += 1
+            st.session_state.body_yesno_result = current
+            st.session_state.body_yesno_time_end = time.time()
+            st.session_state.phase = "body_vowel_start"
+            st.rerun()
+
+        if col2.button("NO"):
+            st.session_state.body_steps += 1
+            st.session_state.body_index += 1
+            st.rerun()
+
+    else:
+        st.subheader("どれでもないですか？")
+        if st.button("どれでもない"):
+            st.session_state.body_yesno_time_end = time.time()
+            st.session_state.phase = "body_free_input"
+            st.rerun()
+
+# ===============================
+# 11. 体調 自由入力
+# ===============================
+elif st.session_state.phase == "body_free_input":
+    st.header("どんな体調ですか？（自由入力）")
+    st.session_state.body_yesno_free_text = st.text_input("自由入力")
+
+    if st.button("決定"):
+        if st.session_state.body_yesno_free_text.strip():
+            st.session_state.phase = "body_vowel_start"
+            st.rerun()
+        else:
+            st.warning("入力してください")
+
+# ===============================
+# 12. 体調 母音入力 開始
+# ===============================
+elif st.session_state.phase == "body_vowel_start":
+    st.header("もう一度聞きます")
+    st.write("身体はどんな感じですか？")
+    st.write("母音（a i u e o）だけで入力してください")
+
+    if st.button("母音入力を始める"):
+        st.session_state.body_input_vowels = ""
+        st.session_state.body_vowel_steps = 0
+        st.session_state.body_vowel_deletes = 0
+        st.session_state.body_vowel_time_start = time.time()
+        st.session_state.body_vowel_active = True   # ← ★追加
+        st.session_state.phase = "body_vowel_input"
+        st.rerun()
+# ===============================
+# 13. 体調 母音入力 本体（kai.py方式）
+# ===============================
+elif st.session_state.phase == "body_vowel_input":
+    st.header("体調 母音入力")
+
+    # ---------- 母音ボタン ----------
+    cols = st.columns(5)
+    for i, v in enumerate(["a", "i", "u", "e", "o"]):
+        if cols[i].button(v, key=f"body_vowel_{v}"):
+            st.session_state.body_input_vowels += v
+            st.session_state.body_vowel_steps += 1
+            st.rerun()
+
+    # ---------- 削除 ----------
+    if st.button("⌫ 削除", key="body_vowel_delete"):
+        if st.session_state.body_input_vowels:
+            st.session_state.body_input_vowels = st.session_state.body_input_vowels[:-1]
+            st.session_state.body_vowel_deletes += 1
+        st.rerun()
+
+    st.write(f"入力：{st.session_state.body_input_vowels}")
+
+    # ---------- 候補生成（kai.py 完全準拠） ----------
+    if st.session_state.body_input_vowels:
+        candidates = []
+
+        for r, j in word_dict.items():
+            v = extract_vowels(r)
+            if match_pattern(v, st.session_state.body_input_vowels, r):
+                candidates.append((r, j, v))
+
+        # 並び替え（kai.pyと同一）
+        candidates.sort(
+            key=lambda x: sort_key(x, st.session_state.body_input_vowels)
+        )
+
+        # ---------- 最大6件表示 ----------
+        for idx, (r, j, v) in enumerate(candidates[:6]):
+            if st.button(
+                j,
+                key=f"body_vowel_candidate_{idx}_{r}"
+            ):
+                st.session_state.body_vowel_result = j
+                st.session_state.body_vowel_time_end = time.time()
+                st.session_state.phase = "save_body"
+                st.rerun()
+
+    st.write("---")
+
+    # ---------- 候補なし ----------
+    if st.button("候補になかった", key="body_vowel_none"):
+        st.session_state.body_vowel_time_end = time.time()
+        st.session_state.phase = "body_vowel_free_input"
+        st.rerun()
+
+# ===============================
+# 13.5 体調 母音 自由入力
+# ===============================
+elif st.session_state.phase == "body_vowel_free_input":
+    st.header("身体はどんな感じですか？（自由入力）")
+    st.session_state.body_vowel_free_text = st.text_input("自由に入力してください")
+
+    if st.button("決定"):
+        if st.session_state.body_vowel_free_text.strip():
+            st.session_state.phase = "save_body"
+            st.rerun()
+        else:
+            st.warning("入力してください")
+
+# ===============================
+# 14. 体調結果 保存 & 完了
+# ===============================
+elif st.session_state.phase == "save_body":
+
+    append_row([
+        # ID
+        st.session_state.experiment_id,
+
+        # 味覚 YES/NO
+        st.session_state.taste_result,
+        st.session_state.taste_free_text,
+        st.session_state.taste_steps,
+        round(
+            st.session_state.taste_time_end
+            - st.session_state.taste_time_start, 2
+        ),
+
+        # 味覚 母音
+        st.session_state.vowel_result,
+        st.session_state.vowel_free_text,
+        st.session_state.vowel_steps,
+        st.session_state.vowel_deletes,
+        round(
+            st.session_state.vowel_time_end
+            - st.session_state.vowel_time_start, 2
+        ),
+
+        # 体調 YES/NO
+        st.session_state.body_yesno_result,
+        st.session_state.body_yesno_free_text,
+        st.session_state.body_steps,
+        body_yesno_duration,
+
+        # 体調 母音
+        st.session_state.body_vowel_result,
+        st.session_state.body_vowel_free_text,
+        st.session_state.body_vowel_steps,
+        st.session_state.body_vowel_deletes,
+        body_vowel_duration,
+    ])
+
+    st.success("すべて完了しました！")
+
+    st.success("すべて完了しました！")
+    st.write("ご協力ありがとうございました。")
+
+    if st.button("最初に戻る"):
+        st.session_state.clear()
+        st.rerun()
