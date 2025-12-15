@@ -278,15 +278,15 @@ elif st.session_state.phase == "taste_checking":
     tastes = st.session_state.taste_list
 
     # 新しいフェーズ追加：taste_question
-    elif st.session_state.phase == "taste_question":
-        idx = st.session_state.taste_index
-        tastes = st.session_state.taste_list
-        current = tastes[idx]
+elif st.session_state.phase == "taste_question":
+    idx = st.session_state.taste_index
+    tastes = st.session_state.taste_list
+    current = tastes[idx]
     
-        st.header("今どんな味のものが食べたいですか？")
-        st.write("当てはまるものでYES,どれでもなかったらどれでもないを押してください")
-        st.write("例）あまい、からい、甘酸っぱいなど")
-        st.subheader(f"「{current}」の味のものが食べたいですか？")
+    st.header("今どんな味のものが食べたいですか？")
+    st.write("当てはまるものでYES,どれでもなかったらどれでもないを押してください")
+    st.write("例）あまい、からい、甘酸っぱいなど")
+    st.subheader(f"「{current}」の味のものが食べたいですか？")
     
     if st.button("次へ"):
         st.session_state.taste_time_start = time.time()  # タイマー開始
@@ -656,6 +656,7 @@ elif st.session_state.phase == "save_body":
     if st.button("最初に戻る"):
         st.session_state.clear()
         st.rerun()
+
 
 
 
