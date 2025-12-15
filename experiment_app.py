@@ -265,7 +265,7 @@ if st.session_state.phase == "id_input":
             )
             st.session_state.taste_index = 0
             st.session_state.taste_steps = 0
-            st.session_state.phase = "taste_checking"
+            st.session_state.phase = "taste_yesnoima"
             st.rerun()
         else:
             st.warning("ニックネームを入力してください")
@@ -325,49 +325,32 @@ elif st.session_state.phase == "taste_free_input":
 
     if st.button("決定"):
         if st.session_state.taste_free_text.strip():
-            st.session_state.phase = "save_taste"
+            st.session_state.phase = "taste_vowel_intro"
             st.rerun()
         else:
             st.warning("入力してください")
-    st.session_state.phase = "taste_vowel"
+
 
 
 
 # ===============================
 # 5. 味覚 母音入力 開始
 # ===============================
-elif st.session_state.phase == "vowel_start":
-    st.header("次も同じ質問です")
-    st.write("今回は母音のみで答えてもらいます。候補に出なかった場合は、候補になかったを押してください。")
-   
-
-elif st.session_state.phase == "vowel_question":
-    st.header("次も同じ質問です")
+elif st.session_state.phase == "taste_vowel_intro":
+    st.header("同じ質問をもう一度します")
     st.write("今はどんな味のものが食べたい気分ですか？ただし母音のみで答えてください。候補になかった場合は、候補になかったを押してください。")
     st.write("ただし、ん＝う、じゃ＝あ、としてください")
     st.write("例）あまい→ああい,しょっぱい→おあい,甘酸っぱい→ああうあい,パーフェクト→ああえうお")
     st.write("母音（あ い う え お）だけで入力してください")
-    
-    if st.button("次へ"):
-        st.session_state.vowel_time_start = time.time()
-        st.session_state.vowel_active = True
-        st.session_state.phase = "vowel_input"
-        st.rerun()
-
 
     if st.button("母音入力を始める"):
         st.session_state.input_vowels = ""
         st.session_state.vowel_steps = 0
         st.session_state.vowel_deletes = 0
         st.session_state.vowel_time_start = time.time()
-        st.session_state.vowel_active = True   # ← ★追加
         st.session_state.phase = "vowel_input"
         st.rerun()
 
-
-# ===============================
-# 6. 味覚 母音入力 本体
-# ===============================
 # ===============================
 # 6. 味覚 母音入力 本体（kai.py方式）
 # ===============================
@@ -653,3 +636,4 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
