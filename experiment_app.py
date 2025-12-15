@@ -4,6 +4,22 @@ import time
 
 import gspread
 from google.oauth2.service_account import Credentials
+@st.cache_resource
+def get_worksheet():
+    scope = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"
+    ]
+
+    creds = Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=scope
+    )
+
+    gc = gspread.authorize(creds)
+    sh = gc.open_by_key(SPREADSHEET_ID)
+    return sh.sheet1
+
 st.markdown("""
 <style>
 /* ===== 母音ボタンをスマホでも強制横並び ===== */
@@ -32,24 +48,12 @@ div[data-testid="column"] button {
 # ===============================
 # Google Sheets 接続
 # ===============================
-scope = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive"
-]
-
-creds = Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"],
-    scopes=scope
-)
-
-gc = gspread.authorize(creds)
 
 # スプレッドシート名
 SPREADSHEET_ID = "1V8eSJwIuwHEWktTsU8VFZlSOzXuM0jUqa8jTjv1vbxQ"
 
-sh = gc.open_by_key(SPREADSHEET_ID)
-ws = sh.sheet1
 def append_row(data):
+    ws = get_worksheet(
     ws.append_row(data, value_input_option="USER_ENTERED")
 
 # ===============================
@@ -645,6 +649,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
