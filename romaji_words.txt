@@ -246,6 +246,7 @@ ie,家
 kaidann,階段
 erebe-ta-,エレベーター
 mado,窓
+pa-fekuto,パーフェクト
 doa,ドア
 sofa,ソファ
 isu,椅子
@@ -335,4 +336,3 @@ bikkuri,びっくり
 kawaru,変わる
 hieshou,冷え症
 kettouchiagatteiru,血糖値上がってる
-
