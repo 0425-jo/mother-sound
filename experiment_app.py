@@ -276,6 +276,7 @@ if st.session_state.phase == "id_input":
 elif st.session_state.phase == "taste_checking":
     idx = st.session_state.taste_index
     tastes = st.session_state.taste_list
+    current = tastes[idx]
 
     # 新しいフェーズ追加：taste_question
 elif st.session_state.phase == "taste_question":
@@ -654,8 +655,11 @@ elif st.session_state.phase == "save_body":
 
 
     if st.button("最初に戻る"):
-        st.session_state.clear()
+        for key in st.session_state.keys():
+            del st.session_state[key]
         st.rerun()
+
+
 
 
 
