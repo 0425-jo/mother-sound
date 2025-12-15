@@ -322,6 +322,13 @@ elif st.session_state.phase == "taste_checking":
         st.session_state.taste_index += 1
         st.rerun()
 
+# ===============================
+# 2.5 味覚 YES 確定後
+# ===============================
+elif st.session_state.phase == "save_taste":
+    # YES で確定した場合は自由入力をスキップして次へ
+    st.session_state.phase = "taste_vowel_intro"
+    st.rerun()
 
 # ===============================
 # 3. 味覚 自由入力
@@ -643,6 +650,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
