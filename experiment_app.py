@@ -273,16 +273,10 @@ if st.session_state.phase == "id_input":
 # ===============================
 # 2. 味覚 YES / NO
 # ===============================
-elif st.session_state.phase == "taste_checking":
-    idx = st.session_state.taste_index
-    tastes = st.session_state.taste_list
-    current = tastes[idx]
-
     # 新しいフェーズ追加：taste_question
 elif st.session_state.phase == "taste_question":
     idx = st.session_state.taste_index
-    tastes = st.session_state.taste_list
-    current = tastes[idx]
+    current = st.session_state.taste_list[idx]
     
     st.header("今どんな味のものが食べたいですか？")
     st.write("当てはまるものでYES,どれでもなかったらどれでもないを押してください")
@@ -295,8 +289,16 @@ elif st.session_state.phase == "taste_question":
         st.rerun()
 
 
+elif st.session_state.phase == "taste_checking":
+    idx = st.session_state.taste_index
+    tastes = st.session_state.taste_list
+
+    if idx < len(tastes):
+        current = tastes[idx]
+        st.subheader(f"「{current}」は当てはまりますか？")
 
         col1, col2 = st.columns(2)
+
         if col1.button("YES"):
             st.session_state.taste_steps += 1
             st.session_state.taste_result = current
@@ -310,11 +312,11 @@ elif st.session_state.phase == "taste_question":
             st.rerun()
 
     else:
-        st.subheader("どれでもありませんか？")
         if st.button("どれでもない"):
             st.session_state.taste_time_end = time.time()
             st.session_state.phase = "taste_free_input"
             st.rerun()
+
 
 # ===============================
 # 3. 味覚 自由入力
@@ -658,6 +660,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
