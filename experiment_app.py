@@ -570,6 +570,18 @@ elif st.session_state.phase == "body_vowel_free_input":
 # ===============================
 elif st.session_state.phase == "save_body":
 
+    # ---- 体調 YES/NO の所要時間 ----
+    body_yesno_duration = round(
+        st.session_state.body_yesno_time_end
+        - st.session_state.body_yesno_time_start, 2
+    )
+
+    # ---- 体調 母音入力の所要時間 ----
+    body_vowel_duration = round(
+        st.session_state.body_vowel_time_end
+        - st.session_state.body_vowel_time_start, 2
+    )
+
     append_row([
         # ID
         st.session_state.experiment_id,
@@ -608,12 +620,8 @@ elif st.session_state.phase == "save_body":
     ])
 
     st.success("すべて完了しました！")
-
-    st.success("すべて完了しました！")
     st.write("ご協力ありがとうございました。")
 
     if st.button("最初に戻る"):
         st.session_state.clear()
         st.rerun()
-
-
