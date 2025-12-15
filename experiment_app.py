@@ -24,22 +24,26 @@ st.markdown("""
 <style>
 .vowel-row {
   display: flex;
-  width: 100%;
-  gap: 10px;              /* ← 間隔を広げる */
-  padding: 4px 0;
+  width: 100vw;          /* ← 画面幅基準 */
+  max-width: 100%;
+  gap: 6px;
+  padding: 0 6px;
+  box-sizing: border-box;
 }
 
 .vowel-btn {
-  flex: 1;
-  padding: 14px 0;        /* ← 高さアップ */
-  font-size: 18px;        /* ← 文字大きく */
+  flex: 1 1 0;
+  min-width: 0;
+  height: 56px;
+  font-size: 18px;
   border-radius: 12px;
   background-color: #1f2937;
   color: white;
-  border: 1px solid #374151;
+  border: none;
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 # ===============================
 # Google Sheets 接続
@@ -368,14 +372,14 @@ elif st.session_state.phase == "vowel_input":
     clicked = components.html(
     """
     <script>
-    const send = (v) => {
-        window.parent.postMessage(
-            { type: "streamlit:setComponentValue", value: v },
-            "*"
-        );
-    };
+    function send(v) {
+      window.parent.postMessage(
+        { type: "streamlit:setComponentValue", value: v },
+        "*"
+      );
+    }
     </script>
-
+    
     <div class="vowel-row">
       <button class="vowel-btn" onclick="send('a')">あ</button>
       <button class="vowel-btn" onclick="send('i')">い</button>
@@ -384,13 +388,10 @@ elif st.session_state.phase == "vowel_input":
       <button class="vowel-btn" onclick="send('o')">お</button>
     </div>
     """,
-    height=120,
-    key="taste_vowel_buttons"   # ← ★必須
-)
+    height=70
+    )
 
-
-    
-    if isinstance(clicked, str):
+    if clicked is not None:
         st.session_state.input_vowels += clicked
         st.session_state.vowel_steps += 1
         st.rerun()
@@ -668,6 +669,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
