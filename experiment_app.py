@@ -24,28 +24,22 @@ st.markdown("""
 <style>
 .vowel-row {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 4px;
   width: 100%;
+  gap: 10px;              /* ← 間隔を広げる */
+  padding: 4px 0;
 }
 
 .vowel-btn {
-  flex: 1 1 0;
-  padding: 8px 0;
-  font-size: 14px;
-  border-radius: 8px;
+  flex: 1;
+  padding: 14px 0;        /* ← 高さアップ */
+  font-size: 18px;        /* ← 文字大きく */
+  border-radius: 12px;
   background-color: #1f2937;
   color: white;
   border: 1px solid #374151;
 }
 </style>
 """, unsafe_allow_html=True)
-
-
-
-
-
 
 # ===============================
 # Google Sheets 接続
@@ -374,15 +368,17 @@ elif st.session_state.phase == "vowel_input":
     clicked = components.html(
         """
         <div class="vowel-row">
-          <button class="vowel-btn" onclick="Streamlit.setComponentValue('a')">a</button>
-          <button class="vowel-btn" onclick="Streamlit.setComponentValue('i')">i</button>
-          <button class="vowel-btn" onclick="Streamlit.setComponentValue('u')">u</button>
-          <button class="vowel-btn" onclick="Streamlit.setComponentValue('e')">e</button>
-          <button class="vowel-btn" onclick="Streamlit.setComponentValue('o')">o</button>
+          <button class="vowel-btn" onclick="Streamlit.setComponentValue('a')">あ</button>
+          <button class="vowel-btn" onclick="Streamlit.setComponentValue('i')">い</button>
+          <button class="vowel-btn" onclick="Streamlit.setComponentValue('u')">う</button>
+          <button class="vowel-btn" onclick="Streamlit.setComponentValue('e')">え</button>
+          <button class="vowel-btn" onclick="Streamlit.setComponentValue('o')">お</button>
         </div>
         """,
-        height=70,
+        height=90,                 # ← 高さを明示（重要）
+        key="vowel_buttons"        # ← ★これがないと反応しない
     )
+
     
     if isinstance(clicked, str):
         st.session_state.input_vowels += clicked
@@ -660,6 +656,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
