@@ -431,11 +431,11 @@ elif st.session_state.phase == "save_vowel":
 # 9. 体調質問 開始（YES/NO）
 # ===============================
 elif st.session_state.phase == "body_start":
-    st.header("第2問：今、身体はどんな感じですか？")
+    st.header("第2問：今、身体の状態、体調体調はどんな感じですか？\n例）だるい、すっきり、さむいなど")
 
     if st.button("次へ"):
         st.session_state.body_list = random.sample(
-            ["だるい", "いたい", "ねむい", "すっきり", "つらい"], 5
+            ["だるい", "いたい", "ねむい", "すっきり", "つらい","元気","めんどう","さむい"], 8
         )
         st.session_state.body_index = 0
         st.session_state.body_steps = 0
@@ -479,7 +479,7 @@ elif st.session_state.phase == "body_yesno_check":
 # 11. 体調 自由入力
 # ===============================
 elif st.session_state.phase == "body_free_input":
-    st.header("どんな体調ですか？（自由入力）")
+    st.header("どんな身体の状態、体調ですか？（自由入力）")
     st.session_state.body_yesno_free_text = st.text_input("自由入力")
 
     if st.button("決定"):
@@ -493,8 +493,8 @@ elif st.session_state.phase == "body_free_input":
 # 12. 体調 母音入力 開始
 # ===============================
 elif st.session_state.phase == "body_vowel_start":
-    st.header("もう一度聞きます")
-    st.write("身体はどんな感じですか？")
+    st.header("もう一度同じ質問をします。")
+    st.write("身体の状態、体調はどんな感じですか？ただし今回は母音のみで答えてもらいます。候補に出なかった場合は、候補になかったを押してください。\nただし、ん＝う、じゃ＝あ、としてください\n例）だるい→あうい,すっきり→ういい,さむい→あうい,パーフェクト→ああうえお")
     st.write("母音（a i u e o）だけで入力してください")
 
     if st.button("母音入力を始める"):
@@ -621,12 +621,13 @@ elif st.session_state.phase == "save_body":
         ])
 
     st.success("すべて完了しました！")
-    st.write("ご協力ありがとうございました。")
+    st.write("ご協力ありがとうございました。\n最初に戻るを押してから終えてください！")
 
 
     if st.button("最初に戻る"):
         st.session_state.clear()
         st.rerun()
+
 
 
 
