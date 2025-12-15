@@ -299,29 +299,28 @@ elif st.session_state.phase == "taste_checking":
     idx = st.session_state.taste_index
     tastes = st.session_state.taste_list
 
-    if idx < len(tastes):
-        current = tastes[idx]
-        st.subheader(f"「{current}」は当てはまりますか？")
+    # ★ ここで完全終了を判定
+    if idx >= len(tastes):
+        st.session_state.taste_time_end = time.time()
+        st.session_state.phase = "taste_free_input"
+        st.rerun()
 
-        col1, col2 = st.columns(2)
+    current = tastes[idx]
+    st.subheader(f"「{current}」は当てはまりますか？")
 
-        if col1.button("YES"):
-            st.session_state.taste_steps += 1
-            st.session_state.taste_result = current
-            st.session_state.taste_time_end = time.time()
-            st.session_state.phase = "save_taste"
-            st.rerun()
+    col1, col2 = st.columns(2)
 
-        if col2.button("NO"):
-            st.session_state.taste_steps += 1
-            st.session_state.taste_index += 1
-            st.rerun()
+    if col1.button("YES"):
+        st.session_state.taste_steps += 1
+        st.session_state.taste_result = current
+        st.session_state.taste_time_end = time.time()
+        st.session_state.phase = "save_taste"
+        st.rerun()
 
-    else:
-        if st.button("どれでもない"):
-            st.session_state.taste_time_end = time.time()
-            st.session_state.phase = "taste_free_input"
-            st.rerun()
+    if col2.button("NO"):
+        st.session_state.taste_steps += 1
+        st.session_state.taste_index += 1
+        st.rerun()
 
 
 # ===============================
@@ -644,6 +643,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
