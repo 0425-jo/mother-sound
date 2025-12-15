@@ -369,6 +369,8 @@ elif st.session_state.phase == "taste_vowel_intro":
 # 6. 味覚 母音入力 本体（kai.py方式）
 # ===============================
 elif st.session_state.phase == "vowel_input":
+    st.header("母音入力")
+
     clicked = components.html(
         """
         <div class="vowel-row">
@@ -379,70 +381,13 @@ elif st.session_state.phase == "vowel_input":
           <button class="vowel-btn" onclick="Streamlit.setComponentValue('o')">o</button>
         </div>
         """,
-        height=60,
+        height=70,
     )
 
-if clicked:   # ← ★これが超重要
-    st.session_state.input_vowels += clicked
-    st.session_state.vowel_steps += 1
-    st.rerun()
-
-    import streamlit.components.v1 as components
-    
-    st.header("母音入力")
-    
-    clicked = components.html("""
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <style>
-    body {
-        margin: 0;
-        padding: 0;
-    }
-    
-    .vowel-row {
-        display: flex;
-        width: 100%;
-        gap: 4px;
-    }
-    
-    .vowel-btn {
-        flex: 1;
-        padding: 10px 0;
-        font-size: 16px;
-        border-radius: 8px;
-        background-color: #1f2937;
-        color: white;
-        border: 1px solid #374151;
-    }
-    </style>
-    </head>
-    <body>
-        <div class="vowel-row">
-        <button class="vowel-btn" onclick="send('a')">a</button>
-        <button class="vowel-btn" onclick="send('i')">i</button>
-        <button class="vowel-btn" onclick="send('u')">u</button>
-        <button class="vowel-btn" onclick="send('e')">e</button>
-        <button class="vowel-btn" onclick="send('o')">o</button>
-        </div>
-    
-        <script>
-        function send(v){
-        Streamlit.setComponentValue(v);
-        }
-        </script>
-    </body>
-    </html>
-    """, height=70)
-    
     if clicked:
         st.session_state.input_vowels += clicked
         st.session_state.vowel_steps += 1
         st.rerun()
-    
-
-
 
     # ---------- 削除 ----------
     if st.button("⌫ 削除", key="taste_vowel_delete"):
@@ -714,6 +659,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
