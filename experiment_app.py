@@ -22,26 +22,26 @@ def get_worksheet():
     
 st.markdown("""
 <style>
-/* 横並びブロックを詰める */
-div[data-testid="stHorizontalBlock"] {
-    gap: 4px !important;   /* ← 超重要 */
+.vowel-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 4px;
+  width: 100%;
 }
 
-/* 列そのもの */
-div[data-testid="column"] {
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-/* ボタン本体 */
-div[data-testid="column"] button {
-    width: 100% !important;
-    min-width: 0 !important;
-    padding: 6px 0 !important;   /* ← 12→6 */
-    font-size: 14px !important;  /* ← 18→14 */
+.vowel-btn {
+  flex: 1 1 0;
+  padding: 8px 0;
+  font-size: 14px;
+  border-radius: 8px;
+  background-color: #1f2937;
+  color: white;
+  border: 1px solid #374151;
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 
@@ -649,6 +649,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
