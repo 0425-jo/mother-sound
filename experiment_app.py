@@ -370,31 +370,36 @@ elif st.session_state.phase == "vowel_input":
     st.header("母音入力")
 
     clicked = components.html(
-    """
-    <script>
-    function send(v) {
-      window.parent.postMessage(
-        { type: "streamlit:setComponentValue", value: v },
-        "*"
-      );
-    }
-    </script>
+        """
+        <script>
+        function send(v) {
+          window.parent.postMessage(
+            {
+              type: "streamlit:setComponentValue",
+              value: v
+            },
+            "*"
+          );
+        }
+        </script>
     
-    <div class="vowel-row">
-      <button class="vowel-btn" onclick="send('a')">あ</button>
-      <button class="vowel-btn" onclick="send('i')">い</button>
-      <button class="vowel-btn" onclick="send('u')">う</button>
-      <button class="vowel-btn" onclick="send('e')">え</button>
-      <button class="vowel-btn" onclick="send('o')">お</button>
-    </div>
-    """,
-    height=70
+        <div class="vowel-row">
+          <button class="vowel-btn" onclick="send('a')">あ</button>
+          <button class="vowel-btn" onclick="send('i')">い</button>
+          <button class="vowel-btn" onclick="send('u')">う</button>
+          <button class="vowel-btn" onclick="send('e')">え</button>
+          <button class="vowel-btn" onclick="send('o')">お</button>
+        </div>
+        """,
+        height=70,
+        key="vowel_buttons"   # ← ★これが無いと絶対に返らない
     )
 
     if isinstance(clicked, dict) and "value" in clicked:
         st.session_state.input_vowels += clicked["value"]
         st.session_state.vowel_steps += 1
         st.rerun()
+
 
 
 
@@ -670,6 +675,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
