@@ -4,6 +4,14 @@ import time
 
 import gspread
 from google.oauth2.service_account import Credentials
+st.markdown("""
+<style>
+/* スマホでも母音ボタンを横並びに固定 */
+div[data-testid="column"] > button {
+    width: 100% !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ===============================
 # Google Sheets 接続
@@ -342,12 +350,14 @@ elif st.session_state.phase == "vowel_input":
     st.header("母音入力")
 
     # ---------- 母音ボタン ----------
-    cols = st.columns(5)
-    for i, v in enumerate(["a", "i", "u", "e", "o"]):
-        if cols[i].button(v, key=f"taste_vowel_{v}"):
-            st.session_state.input_vowels += v
-            st.session_state.vowel_steps += 1
-            st.rerun()
+    cols = st.columns([1,1,1,1,1])
+    for col, v in zip(cols, ["a", "i", "u", "e", "o"]):
+        with col:
+            if st.button(v, key=f"taste_vowel_{v}", use_container_width=True):
+                st.session_state.input_vowels += v
+                st.session_state.vowel_steps += 1
+                st.rerun()
+
 
     # ---------- 削除 ----------
     if st.button("⌫ 削除", key="taste_vowel_delete"):
@@ -502,12 +512,14 @@ elif st.session_state.phase == "body_vowel_input":
     st.header("体調 母音入力")
 
     # ---------- 母音ボタン ----------
-    cols = st.columns(5)
-    for i, v in enumerate(["a", "i", "u", "e", "o"]):
-        if cols[i].button(v, key=f"body_vowel_{v}"):
-            st.session_state.body_input_vowels += v
-            st.session_state.body_vowel_steps += 1
-            st.rerun()
+    cols = st.columns([1,1,1,1,1])
+    for col, v in zip(cols, ["a", "i", "u", "e", "o"]):
+        with col:
+            if st.button(v, key=f"body_vowel_{v}", use_container_width=True):
+                st.session_state.body_input_vowels += v
+                st.session_state.body_vowel_steps += 1
+                st.rerun()
+
 
     # ---------- 削除 ----------
     if st.button("⌫ 削除", key="body_vowel_delete"):
@@ -625,3 +637,4 @@ elif st.session_state.phase == "save_body":
     if st.button("最初に戻る"):
         st.session_state.clear()
         st.rerun()
+
