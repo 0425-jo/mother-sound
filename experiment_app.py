@@ -383,11 +383,12 @@ elif st.session_state.phase == "vowel_input":
         """,
         height=70,
     )
-
-    if clicked:
+    
+    if isinstance(clicked, str):
         st.session_state.input_vowels += clicked
         st.session_state.vowel_steps += 1
         st.rerun()
+
 
     # ---------- 削除 ----------
     if st.button("⌫ 削除", key="taste_vowel_delete"):
@@ -659,6 +660,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
