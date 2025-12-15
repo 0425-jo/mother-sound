@@ -6,9 +6,25 @@ import gspread
 from google.oauth2.service_account import Credentials
 st.markdown("""
 <style>
-/* スマホでも母音ボタンを横並びに固定 */
-div[data-testid="column"] > button {
+/* ===== 母音ボタンをスマホでも強制横並び ===== */
+
+/* columns 全体を横並び固定 */
+div[data-testid="stHorizontalBlock"] {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+}
+
+/* 各列を均等幅にする */
+div[data-testid="column"] {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+}
+
+/* ボタンを列いっぱいに広げる */
+div[data-testid="column"] button {
     width: 100% !important;
+    font-size: 18px;   /* スマホでも押しやすく */
+    padding: 12px 0;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -653,6 +669,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
