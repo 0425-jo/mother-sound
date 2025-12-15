@@ -279,7 +279,7 @@ elif st.session_state.phase == "taste_checking":
 
     if idx < len(tastes):
         current = tastes[idx]
-        st.header("今どんな味のものが食べたいですか？
+        st.header("今どんな味のものが食べたいですか？")
         st.write("当てはまるものでYES,どれでもなかったらどれでもないを押してください")
         st.write("例）あまい、からい、甘酸っぱいなど")
         st.subheader(f"「{current}」の味のものが食べたいですか？")
@@ -633,6 +633,7 @@ elif st.session_state.phase == "save_body":
     if st.button("最初に戻る"):
         st.session_state.clear()
         st.rerun()
+
 
 
 
