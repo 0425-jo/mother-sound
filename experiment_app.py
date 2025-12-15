@@ -21,7 +21,7 @@ creds = Credentials.from_service_account_info(
 gc = gspread.authorize(creds)
 
 # スプレッドシート名
-SPREADSHEET_NAME = "気分入力実験データ"
+SPREADSHEET_NAME = "1V8eSJwIuwHEWktTsU8VFZlSOzXuM0jUqa8jTjv1vbxQ"
 
 sh = gc.open(SPREADSHEET_NAME)
 ws = sh.sheet1
@@ -615,3 +615,4 @@ elif st.session_state.phase == "save_body":
     if st.button("最初に戻る"):
         st.session_state.clear()
         st.rerun()
+
