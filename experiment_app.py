@@ -21,9 +21,9 @@ creds = Credentials.from_service_account_info(
 gc = gspread.authorize(creds)
 
 # スプレッドシート名
-SPREADSHEET_NAME = "1V8eSJwIuwHEWktTsU8VFZlSOzXuM0jUqa8jTjv1vbxQ"
+SPREADSHEET_ID = "1V8eSJwIuwHEWktTsU8VFZlSOzXuM0jUqa8jTjv1vbxQ"
 
-sh = gc.open(SPREADSHEET_NAME)
+sh = gc.open_by_key(SPREADSHEET_ID)
 ws = sh.sheet1
 def append_row(data):
     ws.append_row(data, value_input_option="USER_ENTERED")
@@ -615,4 +615,5 @@ elif st.session_state.phase == "save_body":
     if st.button("最初に戻る"):
         st.session_state.clear()
         st.rerun()
+
 
