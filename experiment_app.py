@@ -22,28 +22,29 @@ def get_worksheet():
 
 st.markdown("""
 <style>
-/* ===== 母音ボタンをスマホでも強制横並び ===== */
+/* ===== 母音ボタン横並び（スマホ対応）===== */
 
-/* columns 全体を横並び固定 */
 div[data-testid="stHorizontalBlock"] {
     display: flex !important;
     flex-wrap: nowrap !important;
+    gap: 4px;              /* 余白を詰める */
 }
 
-/* 各列を均等幅にする */
 div[data-testid="column"] {
-    flex: 1 1 0 !important;
+    flex: 1 1 auto !important;
     min-width: 0 !important;
 }
 
-/* ボタンを列いっぱいに広げる */
+/* ボタンサイズを制限 */
 div[data-testid="column"] button {
     width: 100% !important;
-    font-size: 18px;   /* スマホでも押しやすく */
-    padding: 12px 0;
+    font-size: 14px;       /* ← 小さく */
+    padding: 8px 0;        /* ← 高さを減らす */
+    white-space: nowrap;  /* 折り返し防止 */
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 # ===============================
 # Google Sheets 接続
@@ -649,6 +650,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
