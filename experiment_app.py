@@ -395,10 +395,11 @@ elif st.session_state.phase == "vowel_input":
         key="vowel_buttons"   # ← ★これが無いと絶対に返らない
     )
 
-    if isinstance(clicked, dict) and "value" in clicked:
-        st.session_state.input_vowels += clicked["value"]
+    if isinstance(clicked, str):
+        st.session_state.input_vowels += clicked
         st.session_state.vowel_steps += 1
         st.rerun()
+
 
 
 
@@ -675,6 +676,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
