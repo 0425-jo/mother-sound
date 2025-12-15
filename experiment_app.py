@@ -255,7 +255,8 @@ if "saved" not in st.session_state:
 # ===============================
 if st.session_state.phase == "id_input":
     st.title("入力実験")
-    st.header("これから簡単な質問に答えていただきます。思ったものを選択してください。")
+    st.header("これから2つの質問に答えてください。")
+    st.write("質問に対して一番最初に思ったものを選択してください。")
     st.write("ニックネーム、入力時間、選択結果などの情報は保存されます。ウイルスとかはありません")
     st.session_state.experiment_id = st.text_input("ニックネーム")
 
@@ -285,11 +286,11 @@ elif st.session_state.phase == "taste_yesnoima":
 
     current = tastes[idx]
 
-    st.header("今どんな味のものが食べたいですか？")
+    st.header("第1問:今どんな味のものが食べたいですか？")
     st.write("当てはまるものでYES,どれでもなかったらどれでもないを押してください")
     st.write("例）あまい、からい、甘酸っぱいなど")
 
-    if st.button("次へ"):
+    if st.button("開始"):
         st.session_state.taste_time_start = time.time()
         st.session_state.phase = "taste_checking"
         st.rerun()
@@ -352,7 +353,8 @@ elif st.session_state.phase == "taste_free_input":
 # ===============================
 elif st.session_state.phase == "taste_vowel_intro":
     st.header("同じ質問をもう一度します")
-    st.write("今はどんな味のものが食べたい気分ですか？ただし母音のみで答えてください。候補になかった場合は、候補になかったを押してください。")
+    st.write("今はどんな味のものが食べたい気分ですか？ただし母音のみで答えてください。")
+    st.write("候補になかった場合は、候補になかったを押してください。")
     st.write("ただし、ん＝う、じゃ＝あ、としてください")
     st.write("例）あまい→ああい,しょっぱい→おあい,甘酸っぱい→ああうあい,パーフェクト→ああえうお")
     st.write("母音（あ い う え お）だけで入力してください")
@@ -453,11 +455,12 @@ elif st.session_state.phase == "save_vowel":
 # 9. 体調質問 開始（YES/NO）
 # ===============================
 elif st.session_state.phase == "body_start":
-    st.header("第2問：今、身体の状態、体調体調はどんな感じですか？\n例）だるい、すっきり、さむいなど")
+    st.header("第2問：今の体調はどうですか？")
+    st.write("例）だるい、すっきり、あついなど")
 
-    if st.button("次へ"):
+    if st.button("開始"):
         st.session_state.body_list = random.sample(
-            ["だるい", "いたい", "ねむい", "すっきり", "つらい","元気","めんどう","さむい"], 8
+            ["忙しい", "いたい", "ねむい", "すっきり", "つらい","元気","めんどう","あつい"], 8
         )
         st.session_state.body_index = 0
         st.session_state.body_steps = 0
@@ -650,6 +653,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
