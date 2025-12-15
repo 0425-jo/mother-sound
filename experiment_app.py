@@ -277,12 +277,23 @@ elif st.session_state.phase == "taste_checking":
     idx = st.session_state.taste_index
     tastes = st.session_state.taste_list
 
-    if idx < len(tastes):
+    # 新しいフェーズ追加：taste_question
+    elif st.session_state.phase == "taste_question":
+        idx = st.session_state.taste_index
+        tastes = st.session_state.taste_list
         current = tastes[idx]
+    
         st.header("今どんな味のものが食べたいですか？")
         st.write("当てはまるものでYES,どれでもなかったらどれでもないを押してください")
         st.write("例）あまい、からい、甘酸っぱいなど")
         st.subheader(f"「{current}」の味のものが食べたいですか？")
+    
+    if st.button("次へ"):
+        st.session_state.taste_time_start = time.time()  # タイマー開始
+        st.session_state.phase = "taste_checking"
+        st.rerun()
+
+
 
         col1, col2 = st.columns(2)
         if col1.button("YES"):
@@ -331,10 +342,22 @@ elif st.session_state.phase == "save_taste":
 # ===============================
 elif st.session_state.phase == "vowel_start":
     st.header("次も同じ質問です")
-    st.write("今はどんな味のものが食べたい気分ですか？ただし今回は母音のみで答えてもらいます。候補に出なかった場合は、候補になかったを押してください。")
+    st.write("今回は母音のみで答えてもらいます。候補に出なかった場合は、候補になかったを押してください。")
+   
+
+elif st.session_state.phase == "vowel_question":
+    st.header("次も同じ質問です")
+    st.write("今はどんな味のものが食べたい気分ですか？ただし母音のみで答えてください。候補になかった場合は、候補になかったを押してください。")
     st.write("ただし、ん＝う、じゃ＝あ、としてください")
-    st.write("例）あまい→ああい,しょっぱい→おあい,甘酸っぱい→ああうあい,パーフェクト→ああうえお")
+    st.write("例）あまい→ああい,しょっぱい→おあい,甘酸っぱい→ああうあい,パーフェクト→ああえうお")
     st.write("母音（あ い う え お）だけで入力してください")
+    
+    if st.button("次へ"):
+        st.session_state.vowel_time_start = time.time()
+        st.session_state.vowel_active = True
+        st.session_state.phase = "vowel_input"
+        st.rerun()
+
 
     if st.button("母音入力を始める"):
         st.session_state.input_vowels = ""
@@ -633,6 +656,7 @@ elif st.session_state.phase == "save_body":
     if st.button("最初に戻る"):
         st.session_state.clear()
         st.rerun()
+
 
 
 
