@@ -254,6 +254,8 @@ if "saved" not in st.session_state:
 # ===============================
 if st.session_state.phase == "id_input":
     st.title("入力実験")
+    st.header("これから簡単な質問に答えていただきます。思ったものを選択してください。")
+    st.header("ニックネーム、入力時間、選択結果などの情報は保存されます。ウイルスとかはありません")
     st.session_state.experiment_id = st.text_input("ニックネーム")
 
     if st.button("開始"):
@@ -627,6 +629,7 @@ elif st.session_state.phase == "save_body":
     if st.button("最初に戻る"):
         st.session_state.clear()
         st.rerun()
+
 
 
 
