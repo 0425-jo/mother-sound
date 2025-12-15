@@ -21,26 +21,15 @@ def get_worksheet():
     return sh.sheet1
     
 st.markdown("""
-<style>
-.vowel-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 4px;
-  width: 100%;
-}
-
-.vowel-btn {
-  flex: 1 1 0;
-  padding: 8px 0;
-  font-size: 14px;
-  border-radius: 8px;
-  background-color: #1f2937;
-  color: white;
-  border: 1px solid #374151;
-}
-</style>
+<div class="vowel-row">
+  <button class="vowel-btn" onclick="window.location.href='?v=a'">a</button>
+  <button class="vowel-btn" onclick="window.location.href='?v=i'">i</button>
+  <button class="vowel-btn" onclick="window.location.href='?v=u'">u</button>
+  <button class="vowel-btn" onclick="window.location.href='?v=e'">e</button>
+  <button class="vowel-btn" onclick="window.location.href='?v=o'">o</button>
+</div>
 """, unsafe_allow_html=True)
+
 
 
 
@@ -649,6 +638,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
