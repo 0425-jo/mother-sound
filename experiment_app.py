@@ -253,13 +253,13 @@ if "saved" not in st.session_state:
 # 1. ID入力
 # ===============================
 if st.session_state.phase == "id_input":
-    st.title("簡単な気分入力実験")
+    st.title("入力実験")
     st.session_state.experiment_id = st.text_input("ニックネーム")
 
     if st.button("開始"):
         if st.session_state.experiment_id.strip():
             st.session_state.taste_list = random.sample(
-                ["甘い", "辛い", "酸っぱい", "しょっぱい", "苦い"], 5
+                ["甘い", "辛い", "酸っぱい", "しょっぱい", "苦い","うまい","おなか一杯","甘酸っぱい"], 8
             )
             st.session_state.taste_index = 0
             st.session_state.taste_steps = 0
@@ -277,8 +277,8 @@ elif st.session_state.phase == "taste_checking":
 
     if idx < len(tastes):
         current = tastes[idx]
-        st.header("今の気分に近いのは？")
-        st.subheader(f"「{current}」のものが食べたい気分ですか？")
+        st.header("今どんな味のものが食べたいですか？\n当てはまるものでYES,どれでもなかったらどれでもないを押してください\n例）あまい、からい、甘酸っぱいなど")
+        st.subheader(f"「{current}」の味のものが食べたいですか？")
 
         col1, col2 = st.columns(2)
         if col1.button("YES"):
@@ -304,7 +304,7 @@ elif st.session_state.phase == "taste_checking":
 # 3. 味覚 自由入力
 # ===============================
 elif st.session_state.phase == "taste_free_input":
-    st.header("では、どんな気分でしたか？")
+    st.header("では、どんな味の気分でしたか？")
     st.session_state.taste_free_text = st.text_input("自由に入力してください")
 
     if st.button("決定"):
@@ -326,9 +326,9 @@ elif st.session_state.phase == "save_taste":
 # 5. 味覚 母音入力 開始
 # ===============================
 elif st.session_state.phase == "vowel_start":
-    st.header("次の質問です")
-    st.write("今はどんな味のものが食べたい気分ですか？")
-    st.write("母音（a i u e o）だけで入力してください")
+    st.header("次も同じ質問です")
+    st.write("今はどんな味のものが食べたい気分ですか？ただし今回は母音のみで答えてもらいます。候補に出なかった場合は、候補になかったを押してください。\nただし、ん＝う、じゃ＝あ、としてください\n例）あまい→ああい,しょっぱい→おあい,甘酸っぱい→ああうあい,パーフェクト→ああうえお")
+    st.write("母音（あ い う え お）だけで入力してください")
 
     if st.button("母音入力を始める"):
         st.session_state.input_vowels = ""
@@ -627,5 +627,6 @@ elif st.session_state.phase == "save_body":
     if st.button("最初に戻る"):
         st.session_state.clear()
         st.rerun()
+
 
 
