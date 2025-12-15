@@ -375,15 +375,14 @@ elif st.session_state.phase == "vowel_input":
           <button class="vowel-btn" onclick="Streamlit.setComponentValue('o')">お</button>
         </div>
         """,
-        height=90,                 # ← 高さを明示（重要）
-        key="vowel_buttons"        # ← ★これがないと反応しない
+        height=90,
     )
-
     
-    if isinstance(clicked, str):
+    if clicked is not None:
         st.session_state.input_vowels += clicked
         st.session_state.vowel_steps += 1
         st.rerun()
+
 
 
     # ---------- 削除 ----------
@@ -656,6 +655,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
