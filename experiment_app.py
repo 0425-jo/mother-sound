@@ -391,10 +391,11 @@ elif st.session_state.phase == "vowel_input":
     height=70
     )
 
-    if clicked is not None:
-        st.session_state.input_vowels += clicked
+    if isinstance(clicked, dict) and "value" in clicked:
+        st.session_state.input_vowels += clicked["value"]
         st.session_state.vowel_steps += 1
         st.rerun()
+
 
 
 
@@ -669,6 +670,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
