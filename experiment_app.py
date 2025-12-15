@@ -196,6 +196,7 @@ if "experiment_id" not in st.session_state:
 for key, default in {
     "taste_list": [],
     "taste_index": 0,
+    "body_steps": 0,
     "taste_result": None,
     "taste_free_text": "",
     "taste_time_start": None,
@@ -274,8 +275,11 @@ if st.session_state.phase == "id_input":
 # ===============================
     # 新しいフェーズ追加：taste_question
 elif st.session_state.phase == "taste_yesnoima":
-    idx = st.session_state.taste_index
-    current = st.session_state.taste_list[idx]
+    if st.session_state.taste_index >= len(st.session_state.taste_list):
+    st.session_state.phase = "taste_free_input"
+    st.rerun()
+
+current = st.session_state.taste_list[st.session_state.taste_index]
     
     st.header("今どんな味のものが食べたいですか？")
     st.write("当てはまるものでYES,どれでもなかったらどれでもないを押してください")
@@ -635,5 +639,6 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
