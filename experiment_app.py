@@ -369,42 +369,17 @@ elif st.session_state.phase == "taste_vowel_intro":
 elif st.session_state.phase == "vowel_input":
     st.header("母音入力")
 
-    clicked = components.html(
-        """
-        <script>
-        function send(v) {
-          window.parent.postMessage(
-            {
-              type: "streamlit:setComponentValue",
-              value: v
-            },
-            "*"
-          );
-        }
-        </script>
-    
-        <div class="vowel-row">
-          <button class="vowel-btn" onclick="send('a')">あ</button>
-          <button class="vowel-btn" onclick="send('i')">い</button>
-          <button class="vowel-btn" onclick="send('u')">う</button>
-          <button class="vowel-btn" onclick="send('e')">え</button>
-          <button class="vowel-btn" onclick="send('o')">お</button>
-        </div>
-        """,
-        height=70,
-        key="vowel_buttons"   # ← ★これが無いと絶対に返らない
-    )
-
-    if isinstance(clicked, str):
-        st.session_state.input_vowels += clicked
-        st.session_state.vowel_steps += 1
-        st.rerun()
-
-
-
-
-
-
+    cols = st.columns(5, gap="small")
+    for col, v, label in zip(
+        cols,
+        ["a", "i", "u", "e", "o"],
+        ["あ", "い", "う", "え", "お"]
+    ):
+        with col:
+            if st.button(label, use_container_width=True):
+                st.session_state.input_vowels += v
+                st.session_state.vowel_steps += 1
+                st.rerun()
 
     # ---------- 削除 ----------
     if st.button("⌫ 削除", key="taste_vowel_delete"):
@@ -676,6 +651,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
