@@ -371,7 +371,7 @@ elif st.session_state.phase == "taste_vowel_intro":
 elif st.session_state.phase == "vowel_input":
     st.header("母音入力")
 
-    elif st.session_state.phase == "vowel_input":
+elif st.session_state.phase == "vowel_input":
         import streamlit.components.v1 as components
     
         st.header("母音入力")
@@ -698,6 +698,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
