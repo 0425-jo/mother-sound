@@ -56,37 +56,13 @@ def append_row(data):
 # 母音抽出・マッチ・ソート（kai.py 準拠）
 # ===============================
 
-def extract_vowels(word):
-    vowels = "aiueo"
-    result = []
-    i = 0
-    while i < len(word):
-        if word[i] == "n":
-            count = 1
-            while i + count < len(word) and word[i + count] == "n":
-                count += 1
-            result.append("u" * (count // 2))
-            i += count
-            continue
-
-        if word[i] == "-":
-            result.append(result[-1] if result else "")
-            i += 1
-            continue
-
-        if word[i] in vowels:
-            result.append(word[i])
-
-        i += 1
-    return "".join(result)
-
 
 def is_chouon_word(romaji):
     return "-" in romaji
 
 
 def match_pattern(word_vowels, input_pattern, romaji_word):
-    if not input_pattern:
+    if not input_pattern or not isinstance(input_pattern, str):
         return False
 
     chouon = is_chouon_word(romaji_word)
@@ -669,6 +645,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
