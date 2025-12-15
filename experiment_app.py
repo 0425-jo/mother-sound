@@ -275,19 +275,24 @@ if st.session_state.phase == "id_input":
 # ===============================
     # 新しいフェーズ追加：taste_question
 elif st.session_state.phase == "taste_yesnoima":
-    if st.session_state.taste_index >= len(st.session_state.taste_list):
-    st.session_state.phase = "taste_free_input"
-    st.rerun()
+    idx = st.session_state.taste_index
+    tastes = st.session_state.taste_list
 
-current = st.session_state.taste_list[st.session_state.taste_index]
-    
+    # ★ ここがガード（重要）
+    if idx >= len(tastes):
+        st.session_state.phase = "taste_free_input"
+        st.rerun()
+
+    current = tastes[idx]
+
     st.header("今どんな味のものが食べたいですか？")
     st.write("当てはまるものでYES,どれでもなかったらどれでもないを押してください")
     st.write("例）あまい、からい、甘酸っぱいなど")
-    
+
     if st.button("次へ"):
-        st.session_state.taste_time_start = time.time()  # タイマー開始
+        st.session_state.taste_time_start = time.time()
         st.session_state.phase = "taste_checking"
+        st.rerun()
 
 
 elif st.session_state.phase == "taste_checking":
@@ -639,6 +644,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
