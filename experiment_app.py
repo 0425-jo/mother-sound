@@ -367,6 +367,15 @@ elif st.session_state.phase == "taste_vowel_intro":
 # 6. 味覚 母音入力 本体（kai.py方式）
 # ===============================
 elif st.session_state.phase == "vowel_input":
+    st.markdown("""
+    <style>
+    button[kind="secondary"] {
+        font-size: 16px !important;
+        padding: 0.4rem 0 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     st.header("母音入力")
 
     cols = st.columns(5, gap="small")
@@ -651,6 +660,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
