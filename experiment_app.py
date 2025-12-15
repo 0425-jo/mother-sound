@@ -19,31 +19,30 @@ def get_worksheet():
     gc = gspread.authorize(creds)
     sh = gc.open_by_key(SPREADSHEET_ID)
     return sh.sheet1
-
+    
 st.markdown("""
 <style>
-/* ===== 母音ボタン横並び（スマホ対応）===== */
-
+/* 横並びブロックを詰める */
 div[data-testid="stHorizontalBlock"] {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    gap: 4px;              /* 余白を詰める */
+    gap: 4px !important;   /* ← 超重要 */
 }
 
+/* 列そのもの */
 div[data-testid="column"] {
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
-/* ボタンサイズを制限 */
+/* ボタン本体 */
 div[data-testid="column"] button {
     width: 100% !important;
-    font-size: 14px;       /* ← 小さく */
-    padding: 8px 0;        /* ← 高さを減らす */
-    white-space: nowrap;  /* 折り返し防止 */
+    min-width: 0 !important;
+    padding: 6px 0 !important;   /* ← 12→6 */
+    font-size: 14px !important;  /* ← 18→14 */
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 # ===============================
@@ -650,6 +649,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
