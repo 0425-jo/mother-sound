@@ -265,7 +265,6 @@ if st.session_state.phase == "id_input":
             )
             st.session_state.taste_index = 0
             st.session_state.taste_steps = 0
-            st.session_state.taste_time_start = time.time()
             st.session_state.phase = "taste_checking"
             st.rerun()
         else:
@@ -274,7 +273,7 @@ if st.session_state.phase == "id_input":
 # 2. 味覚 YES / NO
 # ===============================
     # 新しいフェーズ追加：taste_question
-elif st.session_state.phase == "taste_question":
+elif st.session_state.phase == "taste_yesnoima":
     idx = st.session_state.taste_index
     current = st.session_state.taste_list[idx]
     
@@ -286,7 +285,6 @@ elif st.session_state.phase == "taste_question":
     if st.button("次へ"):
         st.session_state.taste_time_start = time.time()  # タイマー開始
         st.session_state.phase = "taste_checking"
-        st.rerun()
 
 
 elif st.session_state.phase == "taste_checking":
@@ -331,13 +329,8 @@ elif st.session_state.phase == "taste_free_input":
             st.rerun()
         else:
             st.warning("入力してください")
+    st.session_state.phase = "taste_vowel"
 
-# ===============================
-# 4. 味覚結果 保存
-# ===============================
-elif st.session_state.phase == "save_taste":
-    st.session_state.phase = "vowel_start"
-    st.rerun()
 
 
 # ===============================
@@ -660,16 +653,3 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
-
-
-
-
-
-
-
-
-
-
-
-
-
