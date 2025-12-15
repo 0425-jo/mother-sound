@@ -366,26 +366,28 @@ elif st.session_state.phase == "vowel_input":
     st.header("母音入力")
 
     clicked = components.html(
-        """
-        <script>
-        const send = (v) => {
-            window.parent.postMessage(
-                { type: "streamlit:setComponentValue", value: v },
-                "*"
-            );
-        };
-        </script>
-    
-        <div class="vowel-row">
-          <button class="vowel-btn" onclick="send('a')">あ</button>
-          <button class="vowel-btn" onclick="send('i')">い</button>
-          <button class="vowel-btn" onclick="send('u')">う</button>
-          <button class="vowel-btn" onclick="send('e')">え</button>
-          <button class="vowel-btn" onclick="send('o')">お</button>
-        </div>
-        """,
-        height=120,   # ← 高さは必ず余裕をもたせる
-    )
+    """
+    <script>
+    const send = (v) => {
+        window.parent.postMessage(
+            { type: "streamlit:setComponentValue", value: v },
+            "*"
+        );
+    };
+    </script>
+
+    <div class="vowel-row">
+      <button class="vowel-btn" onclick="send('a')">あ</button>
+      <button class="vowel-btn" onclick="send('i')">い</button>
+      <button class="vowel-btn" onclick="send('u')">う</button>
+      <button class="vowel-btn" onclick="send('e')">え</button>
+      <button class="vowel-btn" onclick="send('o')">お</button>
+    </div>
+    """,
+    height=120,
+    key="taste_vowel_buttons"   # ← ★必須
+)
+
 
     
     if isinstance(clicked, str):
@@ -666,31 +668,6 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
