@@ -1,7 +1,7 @@
 import streamlit as st
 import random
 import time
-
+import streamlit.components.v1 as components
 import gspread
 from google.oauth2.service_account import Credentials
 @st.cache_resource
@@ -369,6 +369,24 @@ elif st.session_state.phase == "taste_vowel_intro":
 # 6. 味覚 母音入力 本体（kai.py方式）
 # ===============================
 elif st.session_state.phase == "vowel_input":
+    clicked = components.html(
+        """
+        <div class="vowel-row">
+          <button class="vowel-btn" onclick="Streamlit.setComponentValue('a')">a</button>
+          <button class="vowel-btn" onclick="Streamlit.setComponentValue('i')">i</button>
+          <button class="vowel-btn" onclick="Streamlit.setComponentValue('u')">u</button>
+          <button class="vowel-btn" onclick="Streamlit.setComponentValue('e')">e</button>
+          <button class="vowel-btn" onclick="Streamlit.setComponentValue('o')">o</button>
+        </div>
+        """,
+        height=60,
+    )
+
+if clicked:   # ← ★これが超重要
+    st.session_state.input_vowels += clicked
+    st.session_state.vowel_steps += 1
+    st.rerun()
+
     import streamlit.components.v1 as components
     
     st.header("母音入力")
@@ -696,6 +714,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
