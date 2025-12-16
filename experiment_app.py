@@ -283,7 +283,7 @@ elif st.session_state.phase == "taste_yesnoima":
     current = tastes[idx]
 
     st.header("第1問:今どんな味のものが食べたいですか？今思っている直感です！")
-    st.write("甘い,辛い,酸っぱい,しょっぱい,苦い,うまい,おなか一杯,甘酸っぱいをランダムの順番でききます！")
+    st.write("[甘い,辛い,酸っぱい,しょっぱい,苦い,うまい,おなか一杯,甘酸っぱい]をランダムの順番でききます！")
     st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
 
     if st.button("開始"):
@@ -451,7 +451,7 @@ elif st.session_state.phase == "save_vowel":
 # ===============================
 elif st.session_state.phase == "body_start":
     st.header("第2問：今の体調はどうですか？これも今思う直感です！")
-    st.write("忙しい,いたい,ねむい,すっきり,つらい,元気,めんどう,あついをランダムの順番でききます！")
+    st.write("[忙しい,いたい,ねむい,すっきり,つらい,元気,めんどう,あつい]をランダムの順番でききます！")
     st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
 
     if st.button("開始"):
@@ -652,6 +652,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
