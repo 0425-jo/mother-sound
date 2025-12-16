@@ -284,7 +284,7 @@ elif st.session_state.phase == "taste_yesnoima":
 
     st.header("また、同じ質問をします！")
     st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
-    st.write("さっき答えた味覚と同じのが出るまでNOを押し続けて、ない場合その後自由に入力してください！")
+    st.write("さっき答えた味覚と同じのが出るまでNOを押し続けて、ない場合その後入力してください！")
 
     if st.button("スタート"):
         st.session_state.taste_time_start = time.time()
@@ -452,7 +452,7 @@ elif st.session_state.phase == "save_vowel":
 elif st.session_state.phase == "body_start":
     st.header("また、同じ質問をします！")
     st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
-    st.write("さっき答えた体調と同じのが出るまでNOを押し続けて、ない場合その後自由に入力してください！")
+    st.write("さっき答えた体調と同じのが出るまでNOを押し続けて、ない場合その後入力してください！")
 
     if st.button("スタート"):
         st.session_state.body_list = random.sample(
@@ -658,4 +658,5 @@ elif st.session_state.phase == "body_vowel_free_input":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
