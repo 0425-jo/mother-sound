@@ -343,7 +343,7 @@ elif st.session_state.phase == "taste_checking":
 # ===============================
 # save_taste フェーズ
 elif st.session_state.phase == "save_taste":
-    st.session_state.phase = "body_start"
+    st.session_state.phase = "body_vowel_start"
     st.rerun()
 # ===============================
 # 3. 味覚 自由入力
@@ -587,7 +587,7 @@ elif st.session_state.phase == "body_vowel_input":
             ):
                 st.session_state.body_vowel_result = j
                 st.session_state.body_vowel_time_end = time.time()
-                st.session_state.phase = "body_vowel_free_input"
+                st.session_state.phase = "body_yesno_start"
                 st.rerun()
 
     # ---------- 削除 ----------
@@ -608,6 +608,17 @@ elif st.session_state.phase == "body_vowel_input":
 # ===============================
 # 13.5 体調 母音 自由入力
 # ===============================
+
+elif st.session_state.phase == "body_yesno_start":
+    st.session_state.body_list = random.sample(
+        ["ねむい", "つかれた", "げんき", "しんどい", "いそがしい"], 5
+    )
+    st.session_state.body_index = 0
+    st.session_state.body_steps = 0
+    st.session_state.body_yesno_time_start = time.time()
+    st.session_state.phase = "body_yesno_check"
+    st.rerun()
+
 elif st.session_state.phase == "body_vowel_free_input":
     body_free = st.text_input("体調を自由入力してください")
 
@@ -674,4 +685,5 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
