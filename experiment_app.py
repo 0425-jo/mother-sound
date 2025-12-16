@@ -44,6 +44,25 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+.candidate-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    padding: 6px 0;
+}
+
+.candidate-scroll button {
+    white-space: nowrap;
+    min-width: 110px;
+    height: 48px;
+    font-size: 16px;
+    border-radius: 10px;
+}
+</style>
+""", unsafe_allow_html=True)
+
 
 # ===============================
 # Google Sheets 接続
@@ -384,10 +403,7 @@ elif st.session_state.phase == "vowel_input":
             st.session_state.input_vowels = st.session_state.input_vowels[:-1]
             st.session_state.vowel_deletes += 1
         st.rerun()
-
-    st.header(f"入力：{st.session_state.input_vowels}")
-
-    # ---------- 候補生成（kai.py 完全準拠） ----------
+        
     if st.session_state.input_vowels:
         candidates = []
 
@@ -412,9 +428,9 @@ elif st.session_state.phase == "vowel_input":
                 st.session_state.vowel_active = False
                 st.session_state.phase = "save_vowel"
                 st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    st.write("---")
-
+    st.header(f"入力：{st.session_state.input_vowels}")
     # ---------- 候補なし ----------
     if st.button("候補になかった", key="taste_vowel_none"):
         st.session_state.vowel_time_end = time.time()
@@ -544,17 +560,6 @@ elif st.session_state.phase == "body_vowel_input":
                 st.session_state.body_vowel_steps += 1
                 st.rerun()
 
-
-    # ---------- 削除 ----------
-    if st.button("⌫ 削除", key="body_vowel_delete"):
-        if st.session_state.body_input_vowels:
-            st.session_state.body_input_vowels = st.session_state.body_input_vowels[:-1]
-            st.session_state.body_vowel_deletes += 1
-        st.rerun()
-
-    st.header(f"入力：{st.session_state.body_input_vowels}")
-
-    # ---------- 候補生成（kai.py 完全準拠） ----------
     if st.session_state.body_input_vowels:
         candidates = []
 
@@ -578,8 +583,14 @@ elif st.session_state.phase == "body_vowel_input":
                 st.session_state.body_vowel_time_end = time.time()
                 st.session_state.phase = "body_yesno_check"
                 st.rerun()
+    # ---------- 削除 ----------
+    if st.button("⌫ 削除", key="body_vowel_delete"):
+        if st.session_state.body_input_vowels:
+            st.session_state.body_input_vowels = st.session_state.body_input_vowels[:-1]
+            st.session_state.body_vowel_deletes += 1
+        st.rerun()
 
-    st.write("---")
+    st.header(f"入力：{st.session_state.body_input_vowels}")
 
     # ---------- 候補なし ----------
     if st.button("候補になかった", key="body_vowel_none"):
@@ -658,6 +669,7 @@ elif st.session_state.phase == "body_vowel_free_input":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
