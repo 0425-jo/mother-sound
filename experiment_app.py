@@ -503,7 +503,7 @@ elif st.session_state.phase == "body_yesno_check":
             st.session_state.body_steps += 1
             st.session_state.body_yesno_result = current
             st.session_state.body_yesno_time_end = time.time()
-            st.session_state.phase = "body_vowel_start"
+            st.session_state.phase = "save_body"
             st.rerun()
 
         if col2.button("NO"):
@@ -587,7 +587,7 @@ elif st.session_state.phase == "body_vowel_input":
             ):
                 st.session_state.body_vowel_result = j
                 st.session_state.body_vowel_time_end = time.time()
-                st.session_state.phase = "body_yesno_start"
+                st.session_state.phase = "body_start"
                 st.rerun()
 
     # ---------- 削除 ----------
@@ -685,5 +685,6 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
