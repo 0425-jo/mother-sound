@@ -63,6 +63,23 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+.candidate-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.candidate-scroll button {
+    min-width: 110px;
+    height: 48px;
+    font-size: 16px;
+    white-space: nowrap;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ===============================
 # Google Sheets 接続
@@ -418,6 +435,8 @@ elif st.session_state.phase == "vowel_input":
         )
 
         # ---------- 最大6件だけ表示 ----------
+        st.markdown('<div class="candidate-scroll">', unsafe_allow_html=True)
+
         for idx, (r, j, v) in enumerate(candidates[:6]):
             if st.button(
                 j,
@@ -574,6 +593,8 @@ elif st.session_state.phase == "body_vowel_input":
         )
 
         # ---------- 最大6件表示 ----------
+        st.markdown('<div class="candidate-scroll">', unsafe_allow_html=True)
+
         for idx, (r, j, v) in enumerate(candidates[:6]):
             if st.button(
                 j,
@@ -669,6 +690,7 @@ elif st.session_state.phase == "body_vowel_free_input":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
