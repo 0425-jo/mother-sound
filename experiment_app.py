@@ -256,7 +256,7 @@ if st.session_state.phase == "id_input":
     st.write("ニックネーム、入力時間、選択結果などの情報は保存されます。研究に使うのでできるだけ真面目に答えてください！")
     st.session_state.experiment_id = st.text_input("ニックネーム")
 
-    if st.button("開始"):
+    if st.button("スタート"):
         if st.session_state.experiment_id.strip():
             st.session_state.taste_list = random.sample(
                 ["あまい", "からい", "すっぱい", "しょっぱい", "にがい"], 5
@@ -287,7 +287,7 @@ elif st.session_state.phase == "taste_yesnoima":
     st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
     st.write("上の5つの中以外(あまじょっぱい,こってりetc.)で食べたい味があればNOを押し続けて、自由に入力してください！")
 
-    if st.button("開始"):
+    if st.button("スタート"):
         st.session_state.taste_time_start = time.time()
         st.session_state.phase = "taste_checking"
         st.rerun()
@@ -456,7 +456,7 @@ elif st.session_state.phase == "body_start":
     st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
     st.write("上の5つの中以外の体調(めんどい,いたいetc.)があればNOを押し続けて、自由に入力してください！")
 
-    if st.button("開始"):
+    if st.button("スタート"):
         st.session_state.body_list = random.sample(
             ["ねむい", "つかれた","げんき","しんどい","いそがしい"], 5
         )
@@ -654,6 +654,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
