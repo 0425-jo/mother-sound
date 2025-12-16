@@ -286,7 +286,7 @@ if "saved" not in st.session_state:
 # 1. ID入力
 # ===============================
 if st.session_state.phase == "id_input":
-    st.title("入力実験(1分とかで終わる！）")
+    st.title("入力実験(1分とかで終わる！！）")
     st.header("これから2つの質問に答えてください。")
     st.write("質問に対して一番最初に思ったものを直感で選択してください。")
     st.write("ニックネーム、入力時間、選択結果などの情報は保存されます。研究に使うのでできるだけ真面目に答えてください！")
@@ -690,6 +690,7 @@ elif st.session_state.phase == "body_vowel_free_input":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
