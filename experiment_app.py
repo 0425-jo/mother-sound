@@ -452,13 +452,13 @@ elif st.session_state.phase == "save_vowel":
 # ===============================
 elif st.session_state.phase == "body_start":
     st.header("第2問：今の体調はどうですか？これも今思う直感です！")
-    st.write("[ねむい,つらい,元気,めんどう,腹痛い]をランダムの順番でききます！")
+    st.write("[ねむい,つかれた,元気,しんどい,忙しい]をランダムの順番でききます！")
     st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
     st.write("上の5つの中以外で食べたい味があればNOを押し続けて、自由に入力してください！")
 
     if st.button("開始"):
         st.session_state.body_list = random.sample(
-            ["ねむい", "つらい","元気","めんどう","腹痛い"], 5
+            ["ねむい", "つかれた","元気","しんどい","忙しい"], 5
         )
         st.session_state.body_index = 0
         st.session_state.body_steps = 0
@@ -654,6 +654,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
