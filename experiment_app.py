@@ -593,7 +593,13 @@ elif st.session_state.phase == "body_vowel_input":
 # ===============================
 # 13.5 体調 母音 自由入力
 # ===============================
-elif st.session_state.phase == "save_body":
+elif st.session_state.phase == "body_vowel_free_input":
+    body_free = st.text_input("体調を自由入力してください")
+
+    if st.button("決定"):
+        st.session_state.body_free_text = body_free
+        st.session_state.phase = "save_body"
+        st.rerun()
 
     if not st.session_state.saved:   # ← ★追加
         st.session_state.saved = True
@@ -655,6 +661,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
