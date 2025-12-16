@@ -346,11 +346,11 @@ elif st.session_state.phase == "taste_free_input":
 # ===============================
 elif st.session_state.phase == "taste_vowel_intro":
     st.header("第1問:今どんな味のものが食べたいですか？今思っている直感です！")
-    st.write("ただし母音のみで答えてください。")
+    st.header("ただし母音のみで答えてください。")
     st.write("`母音を入力したうえで`候補になかった場合,下にある`候補になかった`を押してください。")
     st.write("ただし、ん＝う、じゃ＝あ、としてください")
     st.write("例）あまい→ああい,しょっぱい→おあい,あまずっぱい→ああうあい,パーフェクト→ああえうお")
-    st.write("母音（a i u e o）だけで入力してください")
+    st.write("のように母音（a i u e o）だけで入力してください")
 
     if st.button("母音入力を始める"):
         st.session_state.input_vowels = ""
@@ -515,7 +515,7 @@ elif st.session_state.phase == "body_free_input":
 # ===============================
 elif st.session_state.phase == "body_vowel_start":
     st.header("第2問：今の体調はどうですか？これも今思う直感です！")
-    st.write("ただし母音のみで答えてください。")
+    st.header("ただし母音のみで答えてください。")
     st.write("`母音を入力したうえで`候補になかった場合,下にある`候補になかった`を押してください。")
     st.write("ただし、ん＝う、じゃ＝あ、としてください")
     st.write("例）だるい→あうい,すっきり→ういい,ねむい→えうい,パーフェクト→ああうえお")
@@ -658,3 +658,4 @@ elif st.session_state.phase == "body_vowel_free_input":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
