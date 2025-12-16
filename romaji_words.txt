@@ -20,7 +20,7 @@ nodogakawaita,のどが渇いた
 onakagasuita,お腹がすいた
 onaka,お腹
 onakaippai,お腹いっぱい
-nemui,眠い
+nemui,ねむい
 memai,めまい
 hiza,ひざ
 atama,頭
@@ -77,7 +77,7 @@ iraira,イライラ
 bikkuri,びっくり
 tanoshii,楽しい
 kurushii,苦しい
-tsukareta,疲れた
+tsukareta,つかれた
 hottoshita,ほっとした
 iyada,いやだ
 asa,朝
@@ -336,3 +336,4 @@ bikkuri,びっくり
 kawaru,変わる
 hieshou,冷え症
 kettouchiagatteiru,血糖値上がってる
+
