@@ -65,13 +65,6 @@ st.markdown("""
 
 st.markdown("""
 <style>
-.candidate-scroll {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-}
-
 .candidate-scroll button {
     min-width: 110px;
     height: 48px;
@@ -286,7 +279,7 @@ if "saved" not in st.session_state:
 # 1. ID入力
 # ===============================
 if st.session_state.phase == "id_input":
-    st.title("入力実験(1分とかで終わる！！）")
+    st.title("入力実験(1分とかで終わる！）")
     st.header("これから2つの質問に答えてください。")
     st.write("質問に対して一番最初に思ったものを直感で選択してください。")
     st.write("ニックネーム、入力時間、選択結果などの情報は保存されます。研究に使うのでできるだけ真面目に答えてください！")
@@ -423,31 +416,55 @@ elif st.session_state.phase == "vowel_input":
         
     if st.session_state.input_vowels:
         candidates = []
-
+    
         for r, j in word_dict.items():
             v = extract_vowels(r)
             if match_pattern(v, st.session_state.input_vowels, r):
                 candidates.append((r, j, v))
-
-        # 並び替え（kai.pyと同じ）
+    
         candidates.sort(
             key=lambda x: sort_key(x, st.session_state.input_vowels)
         )
-
-        # ---------- 最大6件だけ表示 ----------
-        st.markdown('<div class="candidate-scroll">', unsafe_allow_html=True)
-
+    
+        # ==== HTMLで横スクロール候補群 ====
+        html = """
+        <div style="
+            display:flex;
+            overflow-x:auto;
+            gap:8px;
+            padding:6px 0;
+            -webkit-overflow-scrolling: touch;
+        ">
+        """
+    
         for idx, (r, j, v) in enumerate(candidates[:6]):
-            if st.button(
-                j,
-                key=f"taste_vowel_candidate_{idx}_{r}"
-            ):
-                st.session_state.vowel_result = j
-                st.session_state.vowel_time_end = time.time()
-                st.session_state.vowel_active = False
-                st.session_state.phase = "save_vowel"
-                st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
+            html += f"""
+            <form method="post">
+                <button name="candidate" value="{j}"
+                    style="
+                        min-width:110px;
+                        height:48px;
+                        font-size:16px;
+                        border-radius:10px;
+                        border:none;
+                        background:#1f2937;
+                        color:white;
+                    ">
+                    {j}
+                </button>
+            </form>
+            """
+    
+        html += "</div>"
+    
+        result = components.html(html, height=70)
+    
+        if result:
+            st.session_state.vowel_result = result
+            st.session_state.vowel_time_end = time.time()
+            st.session_state.phase = "save_vowel"
+            st.rerun()
+
 
     st.header(f"入力：{st.session_state.input_vowels}")
     # ---------- 候補なし ----------
@@ -579,31 +596,57 @@ elif st.session_state.phase == "body_vowel_input":
                 st.session_state.body_vowel_steps += 1
                 st.rerun()
 
-    if st.session_state.body_input_vowels:
+    if st.session_state.input_vowels:
         candidates = []
-
+    
         for r, j in word_dict.items():
             v = extract_vowels(r)
-            if match_pattern(v, st.session_state.body_input_vowels, r):
+            if match_pattern(v, st.session_state.input_vowels, r):
                 candidates.append((r, j, v))
-
-        # 並び替え（kai.pyと同一）
+    
         candidates.sort(
-            key=lambda x: sort_key(x, st.session_state.body_input_vowels)
+            key=lambda x: sort_key(x, st.session_state.input_vowels)
         )
-
-        # ---------- 最大6件表示 ----------
-        st.markdown('<div class="candidate-scroll">', unsafe_allow_html=True)
-
+    
+        # ==== HTMLで横スクロール候補群 ====
+        html = """
+        <div style="
+            display:flex;
+            overflow-x:auto;
+            gap:8px;
+            padding:6px 0;
+            -webkit-overflow-scrolling: touch;
+        ">
+        """
+    
         for idx, (r, j, v) in enumerate(candidates[:6]):
-            if st.button(
-                j,
-                key=f"body_vowel_candidate_{idx}_{r}"
-            ):
-                st.session_state.body_vowel_result = j
-                st.session_state.body_vowel_time_end = time.time()
-                st.session_state.phase = "body_yesno_check"
-                st.rerun()
+            html += f"""
+            <form method="post">
+                <button name="candidate" value="{j}"
+                    style="
+                        min-width:110px;
+                        height:48px;
+                        font-size:16px;
+                        border-radius:10px;
+                        border:none;
+                        background:#1f2937;
+                        color:white;
+                    ">
+                    {j}
+                </button>
+            </form>
+            """
+    
+        html += "</div>"
+    
+        result = components.html(html, height=70)
+    
+        if result:
+            st.session_state.vowel_result = result
+            st.session_state.vowel_time_end = time.time()
+            st.session_state.phase = "save_vowel"
+            st.rerun()
+
     # ---------- 削除 ----------
     if st.button("⌫ 削除", key="body_vowel_delete"):
         if st.session_state.body_input_vowels:
@@ -690,9 +733,6 @@ elif st.session_state.phase == "body_vowel_free_input":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
-
-
-
 
 
 
