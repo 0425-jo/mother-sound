@@ -341,11 +341,10 @@ elif st.session_state.phase == "taste_checking":
 # ===============================
 # 2.5 味覚 YES 確定後
 # ===============================
+# save_taste フェーズ
 elif st.session_state.phase == "save_taste":
-    # YES で確定した場合は自由入力をスキップして次へ
-    st.session_state.phase = "body_vowel_start"
+    st.session_state.phase = "body_start"
     st.rerun()
-
 # ===============================
 # 3. 味覚 自由入力
 # ===============================
@@ -466,7 +465,14 @@ elif st.session_state.phase == "save_vowel":
 # 9. 体調質問 開始（YES/NO）
 # ===============================
 elif st.session_state.phase == "body_start":
+    st.session_state.body_list = random.sample(
+        ["ねむい", "つかれた","げんき","しんどい","いそがしい"], 5
+    )
+    st.session_state.body_index = 0
+    st.session_state.body_steps = 0
+
     st.header("また、同じ質問をします！")
+
     st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
     st.write("さっき答えた体調と同じのが出るまでNOを押し続けて、ない場合その後入力してください！")
 
@@ -581,8 +587,9 @@ elif st.session_state.phase == "body_vowel_input":
             ):
                 st.session_state.body_vowel_result = j
                 st.session_state.body_vowel_time_end = time.time()
-                st.session_state.phase = "body_yesno_check"
+                st.session_state.phase = "body_vowel_free_input"
                 st.rerun()
+
     # ---------- 削除 ----------
     if st.button("⌫ 削除", key="body_vowel_delete"):
         if st.session_state.body_input_vowels:
@@ -605,7 +612,7 @@ elif st.session_state.phase == "body_vowel_free_input":
     body_free = st.text_input("体調を自由入力してください")
 
     if st.button("決定"):
-        st.session_state.body_free_text = body_free
+        st.session_state.body_vowel_free_text = body_free
         st.session_state.phase = "save_body"
         st.rerun()
 
@@ -623,43 +630,41 @@ elif st.session_state.phase == "body_vowel_free_input":
             st.session_state.body_vowel_time_end
             - st.session_state.body_vowel_time_start, 2
         )
-
-        append_row([
-            # ID
-            st.session_state.experiment_id,
-
-            # 味覚 YES/NO
-            st.session_state.taste_result,
-            st.session_state.taste_free_text,
-            st.session_state.taste_steps,
-            round(
-                st.session_state.taste_time_end
-                - st.session_state.taste_time_start, 2
-            ),
-
-            # 味覚 母音
-            st.session_state.vowel_result,
-            st.session_state.vowel_free_text,
-            st.session_state.vowel_steps,
-            st.session_state.vowel_deletes,
-            round(
-                st.session_state.vowel_time_end
-                - st.session_state.vowel_time_start, 2
-            ),
-
-            # 体調 YES/NO
-            st.session_state.body_yesno_result,
-            st.session_state.body_yesno_free_text,
-            st.session_state.body_steps,
-            body_yesno_duration,
-
-            # 体調 母音
-            st.session_state.body_vowel_result,
-            st.session_state.body_vowel_free_text,
-            st.session_state.body_vowel_steps,
-            st.session_state.body_vowel_deletes,
-            body_vowel_duration,
-        ])
+        
+elif st.session_state.phase == "save_body":
+    append_row([
+        st.session_state.experiment_id,
+        st.session_state.taste_result,
+        st.session_state.taste_free_text,
+        st.session_state.taste_steps,
+        round(
+            st.session_state.taste_time_end
+            - st.session_state.taste_time_start, 2
+        ),
+        st.session_state.vowel_result,
+        st.session_state.vowel_free_text,
+        st.session_state.vowel_steps,
+        st.session_state.vowel_deletes,
+        round(
+            st.session_state.vowel_time_end
+            - st.session_state.vowel_time_start, 2
+        ),
+        st.session_state.body_yesno_result,
+        st.session_state.body_yesno_free_text,
+        st.session_state.body_steps,
+        round(
+            st.session_state.body_yesno_time_end
+            - st.session_state.body_yesno_time_start, 2
+        ),
+        st.session_state.body_vowel_result,
+        st.session_state.body_vowel_free_text,
+        st.session_state.body_vowel_steps,
+        st.session_state.body_vowel_deletes,
+        round(
+            st.session_state.body_vowel_time_end
+            - st.session_state.body_vowel_time_start, 2
+        ),
+    ])
 
     st.success("すべて完了しました！")
     st.write("ご協力ありがとうございました。\n最初に戻るを押してから終えてください！")
@@ -669,3 +674,4 @@ elif st.session_state.phase == "body_vowel_free_input":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
