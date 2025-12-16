@@ -336,4 +336,3 @@ bikkuri,びっくり
 kawaru,変わる
 hieshou,冷え症
 kettouchiagatteiru,血糖値上がってる
-
