@@ -364,7 +364,7 @@ elif st.session_state.phase == "taste_vowel_intro":
 # 6. 味覚 母音入力 本体（kai.py方式）
 # ===============================
 elif st.session_state.phase == "vowel_input":
-    st.header("母音入力")
+    st.write("どんな味が食べたい？")
 
     cols = st.columns(5, gap="small")
     for col, v, label in zip(
@@ -533,7 +533,7 @@ elif st.session_state.phase == "body_vowel_start":
 # 13. 体調 母音入力 本体（kai.py方式）
 # ===============================
 elif st.session_state.phase == "body_vowel_input":
-    st.header("体調 母音入力")
+    st.write("体調はどう？")
 
     # ---------- 母音ボタン ----------
     cols = st.columns([1,1,1,1,1])
@@ -658,5 +658,6 @@ elif st.session_state.phase == "body_vowel_free_input":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
