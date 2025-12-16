@@ -263,7 +263,7 @@ if st.session_state.phase == "id_input":
             )
             st.session_state.taste_index = 0
             st.session_state.taste_steps = 0
-            st.session_state.phase = "taste_yesnoima"
+            st.session_state.phase = "taste_vowel_intro"
             st.rerun()
         else:
             st.warning("ニックネームを入力してください")
@@ -325,7 +325,7 @@ elif st.session_state.phase == "taste_checking":
 # ===============================
 elif st.session_state.phase == "save_taste":
     # YES で確定した場合は自由入力をスキップして次へ
-    st.session_state.phase = "taste_vowel_intro"
+    st.session_state.phase = "body_vowel_start"
     st.rerun()
 
 # ===============================
@@ -445,7 +445,7 @@ elif st.session_state.phase == "vowel_free_input":
 elif st.session_state.phase == "save_vowel":
 
 
-    st.session_state.phase = "body_start"
+    st.session_state.phase = "taste_yesnoima"
     st.rerun()
 # ===============================
 # 9. 体調質問 開始（YES/NO）
@@ -578,7 +578,7 @@ elif st.session_state.phase == "body_vowel_input":
             ):
                 st.session_state.body_vowel_result = j
                 st.session_state.body_vowel_time_end = time.time()
-                st.session_state.phase = "save_body"
+                st.session_state.phase = "body_start"
                 st.rerun()
 
     st.write("---")
@@ -654,6 +654,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
