@@ -578,7 +578,7 @@ elif st.session_state.phase == "body_vowel_input":
             ):
                 st.session_state.body_vowel_result = j
                 st.session_state.body_vowel_time_end = time.time()
-                st.session_state.phase = "body_start"
+                st.session_state.phase = "body_yesno_check"
                 st.rerun()
 
     st.write("---")
@@ -588,6 +588,7 @@ elif st.session_state.phase == "body_vowel_input":
         st.session_state.body_vowel_time_end = time.time()
         st.session_state.phase = "body_vowel_free_input"
         st.rerun()
+    elif st.session_state.phase == "body_vowel_free_input":
 
 # ===============================
 # 13.5 体調 母音 自由入力
@@ -654,6 +655,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
