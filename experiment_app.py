@@ -259,7 +259,7 @@ if st.session_state.phase == "id_input":
     if st.button("開始"):
         if st.session_state.experiment_id.strip():
             st.session_state.taste_list = random.sample(
-                ["甘い", "辛い", "酸っぱい", "しょっぱい", "苦い","うまい","おなか一杯","甘酸っぱい"], 8
+                ["甘い", "辛い", "酸っぱい", "しょっぱい", "苦い"], 5
             )
             st.session_state.taste_index = 0
             st.session_state.taste_steps = 0
@@ -283,8 +283,9 @@ elif st.session_state.phase == "taste_yesnoima":
     current = tastes[idx]
 
     st.header("第1問:今どんな味のものが食べたいですか？今思っている直感です！")
-    st.write("[甘い,辛い,酸っぱい,しょっぱい,苦い,うまい,おなか一杯,甘酸っぱい]をランダムの順番でききます！")
+    st.write("[甘い,辛い,酸っぱい,しょっぱい,苦い]をランダムの順番でききます！")
     st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
+    st.write("上の5つの中以外で食べたい味があればNOを押し続けて、自由に入力してください！")
 
     if st.button("開始"):
         st.session_state.taste_time_start = time.time()
@@ -346,11 +347,11 @@ elif st.session_state.phase == "taste_free_input":
 # ===============================
 elif st.session_state.phase == "taste_vowel_intro":
     st.header("また、同じ質問をします！")
-    st.write("先ほど答えたものと同じものを入力してください。ただし母音のみで答えてください。")
+    st.write("`さっき答えた味覚`を入力してください。ただし母音のみで答えてください。")
     st.write("`母音を入力したうえで`候補になかった場合,下にある`候補になかった`を押してください。")
     st.write("ただし、ん＝う、じゃ＝あ、としてください")
     st.write("例）あまい→ああい,しょっぱい→おあい,甘酸っぱい→ああうあい,パーフェクト→ああえうお")
-    st.write("母音（あ い う え お）だけで入力してください")
+    st.write("母音（a i u e o）だけで入力してください")
 
     if st.button("母音入力を始める"):
         st.session_state.input_vowels = ""
@@ -451,12 +452,13 @@ elif st.session_state.phase == "save_vowel":
 # ===============================
 elif st.session_state.phase == "body_start":
     st.header("第2問：今の体調はどうですか？これも今思う直感です！")
-    st.write("[忙しい,いたい,ねむい,すっきり,つらい,元気,めんどう,あつい]をランダムの順番でききます！")
+    st.write("[ねむい,つらい,元気,めんどう,腹痛い]をランダムの順番でききます！")
     st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
+    st.write("上の5つの中以外で食べたい味があればNOを押し続けて、自由に入力してください！")
 
     if st.button("開始"):
         st.session_state.body_list = random.sample(
-            ["忙しい", "いたい", "ねむい", "すっきり", "つらい","元気","めんどう","あつい"], 8
+            ["ねむい", "つらい","元気","めんどう","腹痛い"], 5
         )
         st.session_state.body_index = 0
         st.session_state.body_steps = 0
@@ -515,7 +517,7 @@ elif st.session_state.phase == "body_free_input":
 # ===============================
 elif st.session_state.phase == "body_vowel_start":
     st.header("また、同じ質問をします！")
-    st.write("先ほど直感で答えたものと同じものを入力してください。ただし母音のみで答えてください。")
+    st.write("`さっき直感で答えた体調`を入力してください。ただし母音のみで答えてください。")
     st.write("`母音を入力したうえで`候補になかった場合,下にある`候補になかった`を押してください。")
     st.write("ただし、ん＝う、じゃ＝あ、としてください")
     st.write("例）だるい→あうい,すっきり→ういい,さむい→あうい,パーフェクト→ああうえお")
@@ -652,6 +654,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
