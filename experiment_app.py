@@ -620,23 +620,17 @@ elif st.session_state.phase == "body_vowel_input":
         """
     
         for idx, (r, j, v) in enumerate(candidates[:6]):
-            html += f"""
-            <form method="post">
-                <button name="candidate" value="{j}"
-                    style="
-                        min-width:110px;
-                        height:48px;
-                        font-size:16px;
-                        border-radius:10px;
-                        border:none;
-                        background:#1f2937;
-                        color:white;
-                    ">
-                    {j}
-                </button>
-            </form>
-            """
-    
+            html += (
+                '<form method="post">'
+                f'<button name="candidate" value="{j}" '
+                'style="min-width:110px;height:48px;'
+                'font-size:16px;border-radius:10px;'
+                'border:none;background:#1f2937;color:white;">'
+                f'{j}'
+                '</button>'
+                '</form>'
+            )
+
         html += "</div>"
     
         result = components.html(html, height=70)
@@ -733,6 +727,7 @@ elif st.session_state.phase == "body_vowel_free_input":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
