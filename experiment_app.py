@@ -250,10 +250,10 @@ if "saved" not in st.session_state:
 # 1. ID入力
 # ===============================
 if st.session_state.phase == "id_input":
-    st.title("入力実験")
+    st.title("入力実験(1分とかで終わる！）")
     st.header("これから2つの質問に答えてください。")
     st.write("質問に対して一番最初に思ったものを選択してください。")
-    st.write("ニックネーム、入力時間、選択結果などの情報は保存されます。ウイルスとかはありません")
+    st.write("ニックネーム、入力時間、選択結果などの情報は保存されます。研究に使うのでできるだけ真面目に答えてください！")
     st.session_state.experiment_id = st.text_input("ニックネーム")
 
     if st.button("開始"):
@@ -282,9 +282,9 @@ elif st.session_state.phase == "taste_yesnoima":
 
     current = tastes[idx]
 
-    st.header("第1問:今どんな味のものが食べたいですか？")
-    st.write("当てはまるものでYES,どれでもなかったらどれでもないを押してください")
-    st.write("例）あまい、からい、甘酸っぱい、あっさりなど")
+    st.header("第1問:今どんな味のものが食べたいですか？今思っている直感です！")
+    st.write("甘い,辛い,酸っぱい,しょっぱい,苦い,うまい,おなか一杯,甘酸っぱいをランダムの順番でききます！")
+    st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
 
     if st.button("開始"):
         st.session_state.taste_time_start = time.time()
@@ -341,16 +341,13 @@ elif st.session_state.phase == "taste_free_input":
         else:
             st.warning("入力してください")
 
-
-
-
 # ===============================
 # 5. 味覚 母音入力 開始
 # ===============================
 elif st.session_state.phase == "taste_vowel_intro":
-    st.header("同じ質問をもう一度します")
-    st.write("今はどんな味のものが食べたい気分ですか？ただし母音のみで答えてください。")
-    st.write("候補になかった場合は、候補になかったを押してください。")
+    st.header("また、同じ質問をします！")
+    st.write("先ほど答えたものと同じものを入力してください。ただし母音のみで答えてください。")
+    st.write("`母音を入力したうえで`候補になかった場合,下にある`候補になかった`を押してください。")
     st.write("ただし、ん＝う、じゃ＝あ、としてください")
     st.write("例）あまい→ああい,しょっぱい→おあい,甘酸っぱい→ああうあい,パーフェクト→ああえうお")
     st.write("母音（あ い う え お）だけで入力してください")
@@ -453,8 +450,9 @@ elif st.session_state.phase == "save_vowel":
 # 9. 体調質問 開始（YES/NO）
 # ===============================
 elif st.session_state.phase == "body_start":
-    st.header("第2問：今の体調はどうですか？")
-    st.write("例）だるい、すっきり、あついなど")
+    st.header("第2問：今の体調はどうですか？これも今思う直感です！")
+    st.write("忙しい,いたい,ねむい,すっきり,つらい,元気,めんどう,あついをランダムの順番でききます！")
+    st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
 
     if st.button("開始"):
         st.session_state.body_list = random.sample(
@@ -516,8 +514,11 @@ elif st.session_state.phase == "body_free_input":
 # 12. 体調 母音入力 開始
 # ===============================
 elif st.session_state.phase == "body_vowel_start":
-    st.header("もう一度同じ質問をします。")
-    st.write("身体の状態、体調はどんな感じですか？ただし今回は母音のみで答えてもらいます。候補に出なかった場合は、候補になかったを押してください。\nただし、ん＝う、じゃ＝あ、としてください\n例）だるい→あうい,すっきり→ういい,さむい→あうい,パーフェクト→ああうえお")
+    st.header("また、同じ質問をします！")
+    st.write("先ほど直感で答えたものと同じものを入力してください。ただし母音のみで答えてください。")
+    st.write("`母音を入力したうえで`候補になかった場合,下にある`候補になかった`を押してください。")
+    st.write("ただし、ん＝う、じゃ＝あ、としてください")
+    st.write("例）だるい→あうい,すっきり→ういい,さむい→あうい,パーフェクト→ああうえお")
     st.write("母音（a i u e o）だけで入力してください")
 
     if st.button("母音入力を始める"):
@@ -651,6 +652,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
