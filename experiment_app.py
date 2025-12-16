@@ -259,7 +259,7 @@ if st.session_state.phase == "id_input":
     if st.button("開始"):
         if st.session_state.experiment_id.strip():
             st.session_state.taste_list = random.sample(
-                ["甘い", "からい", "酸っぱい", "しょっぱい", "苦い"], 5
+                ["あまい", "からい", "すっぱい", "しょっぱい", "にがい"], 5
             )
             st.session_state.taste_index = 0
             st.session_state.taste_steps = 0
@@ -283,9 +283,9 @@ elif st.session_state.phase == "taste_yesnoima":
     current = tastes[idx]
 
     st.header("第1問:今どんな味のものが食べたいですか？今思っている直感です！")
-    st.write("[甘い,からい,酸っぱい,しょっぱい,苦い]をランダムの順番でききます！")
+    st.write("[あまい,からい,すっぱい,しょっぱい,にがいがをランダムの順番でききます！")
     st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
-    st.write("上の5つの中以外(甘じょっぱい,こってりetc.)で食べたい味があればNOを押し続けて、自由に入力してください！")
+    st.write("上の5つの中以外(あまじょっぱい,こってりetc.)で食べたい味があればNOを押し続けて、自由に入力してください！")
 
     if st.button("開始"):
         st.session_state.taste_time_start = time.time()
@@ -350,7 +350,7 @@ elif st.session_state.phase == "taste_vowel_intro":
     st.write("`さっき答えた味覚`と同じもの入力してください。ただし母音のみで答えてください。")
     st.write("`母音を入力したうえで`候補になかった場合,下にある`候補になかった`を押してください。")
     st.write("ただし、ん＝う、じゃ＝あ、としてください")
-    st.write("例）あまい→ああい,しょっぱい→おあい,甘酸っぱい→ああうあい,パーフェクト→ああえうお")
+    st.write("例）あまい→ああい,しょっぱい→おあい,あまずっぱい→ああうあい,パーフェクト→ああえうお")
     st.write("母音（a i u e o）だけで入力してください")
 
     if st.button("母音入力を始める"):
@@ -452,13 +452,13 @@ elif st.session_state.phase == "save_vowel":
 # ===============================
 elif st.session_state.phase == "body_start":
     st.header("第2問：今の体調はどうですか？これも今思う直感です！")
-    st.write("[ねむい,つかれた,元気,しんどい,忙しい]をランダムの順番でききます！")
+    st.write("[ねむい,つかれた,げんき,しんどい,いそがしい]をランダムの順番でききます！")
     st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
     st.write("上の5つの中以外の体調(めんどい,いたいetc.)があればNOを押し続けて、自由に入力してください！")
 
     if st.button("開始"):
         st.session_state.body_list = random.sample(
-            ["ねむい", "つかれた","元気","しんどい","忙しい"], 5
+            ["ねむい", "つかれた","げんき","しんどい","いそがしい"], 5
         )
         st.session_state.body_index = 0
         st.session_state.body_steps = 0
@@ -654,6 +654,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
