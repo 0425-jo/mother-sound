@@ -63,16 +63,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<style>
-.candidate-scroll button {
-    min-width: 110px;
-    height: 48px;
-    font-size: 16px;
-    white-space: nowrap;
-}
-</style>
-""", unsafe_allow_html=True)
 
 # ===============================
 # Google Sheets 接続
@@ -88,6 +78,16 @@ def append_row(data):
 # ===============================
 # 母音抽出・マッチ・ソート（kai.py 準拠）
 # ===============================
+
+
+def is_chouon_word(romaji):
+    return "-" in romaji
+
+
+def match_pattern(word_vowels, input_pattern, romaji_word):
+    if not input_pattern or not isinstance(input_pattern, str):
+        return False
+
     chouon = is_chouon_word(romaji_word)
     wl = len(word_vowels)
     il = len(input_pattern)
@@ -404,59 +404,31 @@ elif st.session_state.phase == "vowel_input":
             st.session_state.vowel_deletes += 1
         st.rerun()
         
-    if st.session_state.body_input_vowels:
+    if st.session_state.input_vowels:
         candidates = []
-    
+
         for r, j in word_dict.items():
             v = extract_vowels(r)
-            if match_pattern(v, st.session_state.body_input_vowels, r):
+            if match_pattern(v, st.session_state.input_vowels, r):
                 candidates.append((r, j, v))
-    
+
+        # 並び替え（kai.pyと同じ）
         candidates.sort(
-            key=lambda x: sort_key(x, st.session_state.body_input_vowels)
+            key=lambda x: sort_key(x, st.session_state.input_vowels)
         )
 
-    
-        # ==== HTMLで横スクロール候補群 ====
-        html = """
-        <div style="
-            display:flex;
-            overflow-x:auto;
-            gap:8px;
-            padding:6px 0;
-            -webkit-overflow-scrolling: touch;
-        ">
-        """
-    
+        # ---------- 最大6件だけ表示 ----------
         for idx, (r, j, v) in enumerate(candidates[:6]):
-            html += f"""
-            <form method="post">
-                <button name="candidate" value="{j}"
-                    style="
-                        min-width:110px;
-                        height:48px;
-                        font-size:16px;
-                        border-radius:10px;
-                        border:none;
-                        background:#1f2937;
-                        color:white;
-                    ">
-                    {j}
-                </button>
-            </form>
-            """
-    
-        html += "</div>"
-    
-        result = components.html(html, height=70)
-    
-        if result:
-            st.session_state.body_vowel_result = result
-            st.session_state.body_vowel_time_end = time.time()
-            st.session_state.phase = "body_vowel_free_input"
-            st.rerun()
-
-
+            if st.button(
+                j,
+                key=f"taste_vowel_candidate_{idx}_{r}"
+            ):
+                st.session_state.vowel_result = j
+                st.session_state.vowel_time_end = time.time()
+                st.session_state.vowel_active = False
+                st.session_state.phase = "save_vowel"
+                st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
 
     st.header(f"入力：{st.session_state.input_vowels}")
     # ---------- 候補なし ----------
@@ -588,53 +560,29 @@ elif st.session_state.phase == "body_vowel_input":
                 st.session_state.body_vowel_steps += 1
                 st.rerun()
 
-    if st.session_state.input_vowels:
+    if st.session_state.body_input_vowels:
         candidates = []
-    
+
         for r, j in word_dict.items():
             v = extract_vowels(r)
-            if match_pattern(v, st.session_state.input_vowels, r):
+            if match_pattern(v, st.session_state.body_input_vowels, r):
                 candidates.append((r, j, v))
-    
+
+        # 並び替え（kai.pyと同一）
         candidates.sort(
-            key=lambda x: sort_key(x, st.session_state.input_vowels)
+            key=lambda x: sort_key(x, st.session_state.body_input_vowels)
         )
 
-
-    
-        # ==== HTMLで横スクロール候補群 ====
-        html = """
-        <div style="
-            display:flex;
-            overflow-x:auto;
-            gap:8px;
-            padding:6px 0;
-            -webkit-overflow-scrolling: touch;
-        ">
-        """
-    
+        # ---------- 最大6件表示 ----------
         for idx, (r, j, v) in enumerate(candidates[:6]):
-            html += (
-                '<form method="post">'
-                f'<button name="candidate" value="{j}" '
-                'style="min-width:110px;height:48px;'
-                'font-size:16px;border-radius:10px;'
-                'border:none;background:#1f2937;color:white;">'
-                f'{j}'
-                '</button>'
-                '</form>'
-            )
-
-        html += "</div>"
-    
-        result = components.html(html, height=70)
-    
-        if result:
-            st.session_state.vowel_result = result
-            st.session_state.vowel_time_end = time.time()
-            st.session_state.phase = "save_vowel"
-            st.rerun()
-
+            if st.button(
+                j,
+                key=f"body_vowel_candidate_{idx}_{r}"
+            ):
+                st.session_state.body_vowel_result = j
+                st.session_state.body_vowel_time_end = time.time()
+                st.session_state.phase = "body_yesno_check"
+                st.rerun()
     # ---------- 削除 ----------
     if st.button("⌫ 削除", key="body_vowel_delete"):
         if st.session_state.body_input_vowels:
@@ -657,61 +605,63 @@ elif st.session_state.phase == "body_vowel_free_input":
     body_free = st.text_input("体調を自由入力してください")
 
     if st.button("決定"):
-        st.session_state.body_vowel_free_text = body_free
+        st.session_state.body_free_text = body_free
         st.session_state.phase = "save_body"
         st.rerun()
 
+    if not st.session_state.saved:   # ← ★追加
+        st.session_state.saved = True
 
-elif st.session_state.phase == "save_body":
+        # ---- 体調 YES/NO の所要時間 ----
+        body_yesno_duration = round(
+            st.session_state.body_yesno_time_end
+            - st.session_state.body_yesno_time_start, 2
+        )
 
-    body_yesno_duration = round(
-        st.session_state.body_yesno_time_end
-        - st.session_state.body_yesno_time_start, 2
-    )
-    
-    body_vowel_duration = round(
-        st.session_state.body_vowel_time_end
-        - st.session_state.body_vowel_time_start, 2
-    )
-    
-    append_row([
-        st.session_state.experiment_id,
-    
-        # 味覚 YES/NO
-        st.session_state.taste_result,
-        st.session_state.taste_free_text,
-        st.session_state.taste_steps,
-        round(
-            st.session_state.taste_time_end
-            - st.session_state.taste_time_start, 2
-        ),
-    
-        # 味覚 母音
-        st.session_state.vowel_result,
-        st.session_state.vowel_free_text,
-        st.session_state.vowel_steps,
-        st.session_state.vowel_deletes,
-        round(
-             st.session_state.vowel_time_end
-             - st.session_state.vowel_time_start, 2
-        ),
-    
-        # 体調 YES/NO
-        st.session_state.body_yesno_result,
-        st.session_state.body_yesno_free_text,
-        st.session_state.body_steps,
-        body_yesno_duration,
-    
-        # 体調 母音
-        st.session_state.body_vowel_result,
-        st.session_state.body_vowel_free_text,
-        st.session_state.body_vowel_steps,
-        st.session_state.body_vowel_deletes,
-        body_vowel_duration,
-    ])
-    
-        st.success("すべて完了しました！")
+        # ---- 体調 母音入力の所要時間 ----
+        body_vowel_duration = round(
+            st.session_state.body_vowel_time_end
+            - st.session_state.body_vowel_time_start, 2
+        )
 
+        append_row([
+            # ID
+            st.session_state.experiment_id,
+
+            # 味覚 YES/NO
+            st.session_state.taste_result,
+            st.session_state.taste_free_text,
+            st.session_state.taste_steps,
+            round(
+                st.session_state.taste_time_end
+                - st.session_state.taste_time_start, 2
+            ),
+
+            # 味覚 母音
+            st.session_state.vowel_result,
+            st.session_state.vowel_free_text,
+            st.session_state.vowel_steps,
+            st.session_state.vowel_deletes,
+            round(
+                st.session_state.vowel_time_end
+                - st.session_state.vowel_time_start, 2
+            ),
+
+            # 体調 YES/NO
+            st.session_state.body_yesno_result,
+            st.session_state.body_yesno_free_text,
+            st.session_state.body_steps,
+            body_yesno_duration,
+
+            # 体調 母音
+            st.session_state.body_vowel_result,
+            st.session_state.body_vowel_free_text,
+            st.session_state.body_vowel_steps,
+            st.session_state.body_vowel_deletes,
+            body_vowel_duration,
+        ])
+
+    st.success("すべて完了しました！")
     st.write("ご協力ありがとうございました。\n最初に戻るを押してから終えてください！")
 
 
@@ -719,9 +669,3 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
-
-
-
-
-
-
