@@ -664,8 +664,24 @@ elif st.session_state.phase == "body_vowel_free_input":
         
 elif st.session_state.phase == "save_body":
 
-    # ===== 二重保存防止 =====
     if not st.session_state.saved:
+        # 終了時間が None の場合は現在時刻で代用
+        if st.session_state.body_yesno_time_end is None:
+            st.session_state.body_yesno_time_end = time.time()
+        if st.session_state.body_vowel_time_end is None:
+            st.session_state.body_vowel_time_end = time.time()
+
+        # 所要時間計算
+        body_yesno_duration = round(
+            st.session_state.body_yesno_time_end
+            - st.session_state.body_yesno_time_start, 2
+        )
+        body_vowel_duration = round(
+            st.session_state.body_vowel_time_end
+            - st.session_state.body_vowel_time_start, 2
+        )
+
+        # データ保存
         append_row([
             st.session_state.experiment_id,
             st.session_state.taste_result,
@@ -686,21 +702,16 @@ elif st.session_state.phase == "save_body":
             st.session_state.body_yesno_result,
             st.session_state.body_yesno_free_text,
             st.session_state.body_steps,
-            round(
-                st.session_state.body_yesno_time_end
-                - st.session_state.body_yesno_time_start, 2
-            ),
+            body_yesno_duration,
             st.session_state.body_vowel_result,
             st.session_state.body_vowel_free_text,
             st.session_state.body_vowel_steps,
             st.session_state.body_vowel_deletes,
-            round(
-                st.session_state.body_vowel_time_end
-                - st.session_state.body_vowel_time_start, 2
-            ),
+            body_vowel_duration,
         ])
 
-        st.session_state.saved = True   # ← ★ここが超重要
+        st.session_state.saved = True
+
 
     st.success("すべて完了しました！")
     st.write("ご協力ありがとうございました。\n最初に戻るを押してから終えてください！")
@@ -709,4 +720,5 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
 
