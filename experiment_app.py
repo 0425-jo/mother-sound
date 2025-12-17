@@ -326,7 +326,7 @@ elif st.session_state.phase == "taste_checking":
         st.rerun()
 
     current = tastes[idx]
-    st.subheader(f"「{current}」の味のものが食べたいですか？")
+    st.subheader(f"「{current}」味を食べたいですか？")
 
     col1, col2 = st.columns(2)
 
@@ -697,4 +697,5 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
 
