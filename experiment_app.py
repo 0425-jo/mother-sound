@@ -65,6 +65,25 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+st.markdown("""
+<style>
+/* ===== 候補ボタンを文字相応サイズにする ===== */
+button[kind="secondary"] {
+    max-width: 240px !important;   /* 横に伸びすぎない */
+    min-width: 120px !important;   /* 小さくなりすぎない */
+    padding: 10px 14px !important;
+    font-size: 16px !important;
+    border-radius: 12px !important;
+    margin-bottom: 6px;
+}
+
+/* 候補エリア自体も幅制限 */
+[data-testid="column"] button[kind="secondary"] {
+    width: auto !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 
 
 # ===============================
@@ -696,6 +715,7 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
 
 
 
