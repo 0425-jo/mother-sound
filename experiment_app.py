@@ -38,7 +38,7 @@ st.markdown("""
 
 /* 中のボタンは幅100% */
 .vowel-row .stButton > button {
-  width: 100%;
+  width: 80%;
   height: 56px;
   font-size: 18px;
   border-radius: 12px;
@@ -716,6 +716,7 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
 
 
 
