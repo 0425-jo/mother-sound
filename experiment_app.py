@@ -32,7 +32,7 @@ st.markdown("""
 
 /* ★ 真犯人：stButton を横並びにする */
 .vowel-row .stButton {
-  flex: 1 1 0 !important;
+  flex: 0 0 auto !important;
   min-width: 0 !important;
 }
 
@@ -716,6 +716,7 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
 
 
 
