@@ -46,30 +46,11 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-
-st.markdown("""
-<style>
-.candidate-scroll {
-    display: flex;
-    overflow-x: auto;
-    gap: 8px;
-    padding: 6px 0;
-}
-
-.candidate-scroll button {
-    white-space: nowrap;
-    min-width: 110px;
-    height: 48px;
-    font-size: 16px;
-    border-radius: 10px;
-}
-</style>
-""", unsafe_allow_html=True)
 st.markdown("""
 <style>
 /* ===== 候補ボタン：さらに小さく ===== */
 button[kind="secondary"] {
-    max-width: 150px !important;   /* ← ここを縮小 */
+    max-width: 100px !important;   /* ← ここを縮小 */
     min-width: 70px !important;
     padding: 6px 10px !important;  /* ← 高さを下げる */
     font-size: 14px !important;    /* ← 文字サイズ */
@@ -716,6 +697,7 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
 
 
 
