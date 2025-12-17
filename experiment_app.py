@@ -358,7 +358,7 @@ elif st.session_state.phase == "taste_free_input":
 
     if st.button("決定"):
         if st.session_state.taste_free_text.strip():
-            st.session_state.phase = "taste_vowel_intro"
+            st.session_state.phase = "body_vowel_start"
             st.rerun()
         else:
             st.warning("入力してください")
@@ -697,5 +697,6 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
 
 
