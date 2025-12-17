@@ -402,7 +402,7 @@ elif st.session_state.phase == "vowel_input":
             st.session_state.input_vowels = st.session_state.input_vowels[:-1]
             st.session_state.vowel_deletes += 1
         st.rerun()
-        
+    st.write("－－－－－－－－－－－－－ー")    
     if st.session_state.input_vowels:
         candidates = []
 
@@ -606,7 +606,7 @@ elif st.session_state.phase == "body_vowel_input":
             st.session_state.body_input_vowels = st.session_state.body_input_vowels[:-1]
             st.session_state.body_vowel_deletes += 1
         st.rerun()
-
+    st.write("－－－－－－－－－－－－－ー")   
     st.header(f"入力：{st.session_state.body_input_vowels}")
 
     # ---------- 候補なし ----------
@@ -695,6 +695,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
