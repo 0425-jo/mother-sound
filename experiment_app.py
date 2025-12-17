@@ -569,7 +569,10 @@ elif st.session_state.phase == "body_vowel_input":
     # ---------- 母音ボタン ----------
     st.markdown('<div class="vowel-row">', unsafe_allow_html=True)
 
-    for v in ["a","i","u","e","o"]:
+    for v, label in zip(
+        ["a", "i", "u", "e", "o"],
+        ["あ", "い", "う", "え", "お"]
+    ):
         if st.button(v, key=f"body_vowel_{v}"):
             st.session_state.body_input_vowels += v
             st.session_state.body_vowel_steps += 1
@@ -704,6 +707,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
