@@ -643,46 +643,39 @@ elif st.session_state.phase == "body_vowel_free_input":
         st.session_state.body_vowel_time_end = st.session_state.body_vowel_time_end or time.time()
         st.session_state.phase = "save_body"
         st.rerun()
-
-
-    if not st.session_state.saved:   # ← ★追加
-        st.session_state.saved = True
-
-        # ---- 体調 YES/NO の所要時間 ----
-        body_yesno_duration = round(
-            st.session_state.body_yesno_time_end
-            - st.session_state.body_yesno_time_start, 2
-        )
-
-        # ---- 体調 母音入力の所要時間 ----
-        body_vowel_duration = round(
-            st.session_state.body_vowel_time_end
-            - st.session_state.body_vowel_time_start, 2
-        )
         
 elif st.session_state.phase == "save_body":
     if not st.session_state.saved:
-        # 上記の None チェックを使って安全に計算
+
+        # ===== 体調 YES/NO 時間（None対策込み）=====
         body_yesno_start = st.session_state.body_yesno_time_start or time.time()
-        body_yesno_end = st.session_state.body_yesno_time_end or time.time()
+        body_yesno_end   = st.session_state.body_yesno_time_end   or time.time()
         body_yesno_duration = round(body_yesno_end - body_yesno_start, 2)
 
+        # ===== 体調 母音入力 時間（None対策込み）=====
         body_vowel_start = st.session_state.body_vowel_time_start or time.time()
-        body_vowel_end = st.session_state.body_vowel_time_end or time.time()
+        body_vowel_end   = st.session_state.body_vowel_time_end   or time.time()
         body_vowel_duration = round(body_vowel_end - body_vowel_start, 2)
 
-        # データ保存
         append_row([
             st.session_state.experiment_id,
             st.session_state.taste_result,
             st.session_state.taste_free_text,
             st.session_state.taste_steps,
-            round(st.session_state.taste_time_end - st.session_state.taste_time_start, 2),
+            round(
+                st.session_state.taste_time_end
+                - st.session_state.taste_time_start,
+                2
+            ),
             st.session_state.vowel_result,
             st.session_state.vowel_free_text,
             st.session_state.vowel_steps,
             st.session_state.vowel_deletes,
-            round(st.session_state.vowel_time_end - st.session_state.vowel_time_start, 2),
+            round(
+                st.session_state.vowel_time_end
+                - st.session_state.vowel_time_start,
+                2
+            ),
             st.session_state.body_yesno_result,
             st.session_state.body_yesno_free_text,
             st.session_state.body_steps,
@@ -693,17 +686,13 @@ elif st.session_state.phase == "save_body":
             st.session_state.body_vowel_deletes,
             body_vowel_duration,
         ])
+
         st.session_state.saved = True
 
     st.success("すべて完了しました！")
-
     st.write("ご協力ありがとうございました。\n最初に戻るを押してから終えてください！")
 
     if st.button("最初に戻る"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
-
-
-
-
