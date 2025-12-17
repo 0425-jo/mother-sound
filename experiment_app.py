@@ -704,21 +704,30 @@ elif st.session_state.phase == "save_body":
 
 st.markdown("""
 <style>
-/* ===== スマホでも横並びを強制するコンテナ ===== */
+/* ===== 左右レイアウトを絶対に横にする ===== */
 .force-horizontal {
-    display: grid;
-    grid-template-columns: 70px 1fr; /* 左固定 / 右可変 */
+    display: flex !important;
+    flex-direction: row !important;
     gap: 8px;
-    align-items: start;
+    width: 100%;
 }
 
-/* 左：母音ボタン縦 */
+/* 左：母音（縦並びのまま） */
+.force-vowels {
+    width: 70px;
+    flex-shrink: 0;
+}
+
 .force-vowels button {
     width: 100%;
     min-height: 48px;
 }
 
 /* 右：候補 */
+.force-candidates {
+    flex: 1;
+}
+
 .force-candidates button {
     width: 100%;
     min-height: 44px;
