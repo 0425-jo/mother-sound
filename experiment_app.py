@@ -50,7 +50,7 @@ st.markdown("""
 <style>
 /* ===== 候補ボタン：さらに小さく ===== */
 button[kind="secondary"] {
-    max-width: 50px !important;   /* ← ここを縮小 */
+    max-width: 120px !important;   /* ← ここを縮小 */
     min-width: 70px !important;
     padding: 6px 10px !important;  /* ← 高さを下げる */
     font-size: 14px !important;    /* ← 文字サイズ */
@@ -697,6 +697,7 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
 
 
 
