@@ -22,21 +22,22 @@ def get_worksheet():
     
 st.markdown("""
 <style>
+/* ===== 母音ボタン 横一列 強制 ===== */
 .vowel-row {
-  display: flex;
-  width: 100vw;
-  max-width: 100%;
+  display: flex !important;
+  flex-wrap: nowrap !important;
   gap: 6px;
-  padding: 0 6px;
-  box-sizing: border-box;
-  flex-wrap: nowrap;
+  width: 100%;
 }
 
-.vowel-row > div {
-  flex: 1 1 0;
+/* ★ 真犯人：stButton を横並びにする */
+.vowel-row .stButton {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
 }
 
-.vowel-row button {
+/* 中のボタンは幅100% */
+.vowel-row .stButton > button {
   width: 100%;
   height: 56px;
   font-size: 18px;
@@ -44,7 +45,6 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
-
 
 
 st.markdown("""
@@ -704,6 +704,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
