@@ -638,7 +638,7 @@ elif st.session_state.phase == "body_yesno_start":
 elif st.session_state.phase == "body_vowel_free_input":
     st.session_state.body_vowel_free_text = st.text_input("体調を自由入力してください")
     if st.button("決定"):
-        st.session_state.body_yesno_free_text = body_free  # 自由入力テキスト
+        st.session_state.body_yesno_free_text = "body_free"  # 自由入力テキスト
         st.session_state.body_yesno_time_end = st.session_state.body_yesno_time_end or time.time()
         st.session_state.body_vowel_time_end = st.session_state.body_vowel_time_end or time.time()
         st.session_state.phase = "body_start"
@@ -696,6 +696,7 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
 
 
 
