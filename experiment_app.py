@@ -416,17 +416,22 @@ elif st.session_state.phase == "vowel_input":
             key=lambda x: sort_key(x, st.session_state.input_vowels)
         )
 
-        # ---------- 最大6件だけ表示 ----------
-        for idx, (r, j, v) in enumerate(candidates[:6]):
-            if st.button(
-                j,
-                key=f"taste_vowel_candidate_{idx}_{r}"
-            ):
-                st.session_state.vowel_result = j
-                st.session_state.vowel_time_end = time.time()
-                st.session_state.vowel_active = False
-                st.session_state.phase = "save_vowel"
-                st.rerun()
+       # ---------- 最大6件を横並びで表示 ----------
+        cols = st.columns(6)
+
+        for col, (r, j, v) in zip(cols, candidates[:6]):
+            with col:
+                if st.button(
+                    j,
+                    key=f"taste_vowel_candidate_{r}",
+                    use_container_width=True
+                ):
+                    st.session_state.vowel_result = j
+                    st.session_state.vowel_time_end = time.time()
+                    st.session_state.vowel_active = False
+                    st.session_state.phase = "save_vowel"
+                    st.rerun()
+
         st.markdown("</div>", unsafe_allow_html=True)
 
     st.header(f"入力：{st.session_state.input_vowels}")
@@ -579,16 +584,21 @@ elif st.session_state.phase == "body_vowel_input":
             key=lambda x: sort_key(x, st.session_state.body_input_vowels)
         )
 
-        # ---------- 最大6件表示 ----------
-        for idx, (r, j, v) in enumerate(candidates[:6]):
-            if st.button(
-                j,
-                key=f"body_vowel_candidate_{idx}_{r}"
-            ):
-                st.session_state.body_vowel_result = j
-                st.session_state.body_vowel_time_end = time.time()
-                st.session_state.phase = "body_start"
-                st.rerun()
+        # ---------- 最大6件を横並び ----------
+        cols = st.columns(6)
+
+        for col, (r, j, v) in zip(cols, candidates[:6]):
+            with col:
+                if st.button(
+                    j,
+                    key=f"body_vowel_candidate_{r}",
+                    use_container_width=True
+                ):
+                    st.session_state.body_vowel_result = j
+                    st.session_state.body_vowel_time_end = time.time()
+                    st.session_state.phase = "body_start"
+                    st.rerun()
+
 
     # ---------- 削除 ----------
     if st.button("⌫ 削除", key="body_vowel_delete"):
@@ -685,6 +695,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
