@@ -24,25 +24,23 @@ st.markdown("""
 <style>
 .vowel-row {
   display: flex;
-  width: 100vw;          /* ← 画面幅基準 */
+  width: 100vw;
   max-width: 100%;
   gap: 6px;
   padding: 0 6px;
   box-sizing: border-box;
 }
 
-.vowel-btn {
+.vowel-row button {
   flex: 1 1 0;
   min-width: 0;
   height: 56px;
-  font-size: 18px;
-  border-radius: 12px;
-  background-color: #1f2937;
-  color: white;
-  border: none;
+  font-size: 20px;
+  border-radius: 14px;
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 st.markdown("""
 <style>
@@ -384,17 +382,19 @@ elif st.session_state.phase == "taste_vowel_intro":
 elif st.session_state.phase == "vowel_input":
     st.write("どんな味が食べたい？")
 
-    cols = st.columns(5, gap="small")
-    for col, v, label in zip(
-        cols,
+    st.markdown('<div class="vowel-row">', unsafe_allow_html=True)
+    
+    for v, label in zip(
         ["a", "i", "u", "e", "o"],
         ["あ", "い", "う", "え", "お"]
     ):
-        with col:
-            if st.button(label, use_container_width=True):
-                st.session_state.input_vowels += v
-                st.session_state.vowel_steps += 1
-                st.rerun()
+        if st.button(label, key=f"vowel_{v}"):
+            st.session_state.input_vowels += v
+            st.session_state.vowel_steps += 1
+            st.rerun()
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
     # ---------- 削除 ----------
     if st.button("⌫ 削除", key="taste_vowel_delete"):
@@ -562,13 +562,16 @@ elif st.session_state.phase == "body_vowel_input":
     st.write("体調はどう？")
 
     # ---------- 母音ボタン ----------
-    cols = st.columns([1,1,1,1,1])
-    for col, v in zip(cols, ["a", "i", "u", "e", "o"]):
-        with col:
-            if st.button(v, key=f"body_vowel_{v}", use_container_width=True):
-                st.session_state.body_input_vowels += v
-                st.session_state.body_vowel_steps += 1
-                st.rerun()
+    st.markdown('<div class="vowel-row">', unsafe_allow_html=True)
+
+    for v in ["a","i","u","e","o"]:
+        if st.button(v, key=f"body_vowel_{v}"):
+            st.session_state.body_input_vowels += v
+            st.session_state.body_vowel_steps += 1
+            st.rerun()
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
     if st.session_state.body_input_vowels:
         candidates = []
@@ -696,6 +699,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
