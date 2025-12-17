@@ -29,17 +29,22 @@ st.markdown("""
   gap: 6px;
   padding: 0 6px;
   box-sizing: border-box;
+  flex-wrap: nowrap;
+}
+
+.vowel-row > div {
+  flex: 1 1 0;
 }
 
 .vowel-row button {
-  flex: 1 1 0;
-  min-width: 0;
+  width: 100%;
   height: 56px;
-  font-size: 20px;
-  border-radius: 14px;
+  font-size: 18px;
+  border-radius: 12px;
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 st.markdown("""
@@ -699,6 +704,7 @@ elif st.session_state.phase == "save_body":
         for key in st.session_state.keys():
             del st.session_state[key]
         st.rerun()
+
 
 
 
