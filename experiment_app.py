@@ -19,53 +19,6 @@ def get_worksheet():
     gc = gspread.authorize(creds)
     sh = gc.open_by_key(SPREADSHEET_ID)
     return sh.sheet1
-    
-st.markdown("""
-<style>
-/* ===== 母音ボタン 横一列 強制 ===== */
-.vowel-row {
-  display: flex !important;
-  flex-wrap: nowrap !important;
-  gap: 6px;
-  width: 100%;
-}
-
-/* ★ 真犯人：stButton を横並びにする */
-.vowel-row .stButton {
-  flex: 1 1 0 !important;
-  min-width: 0 !important;
-}
-
-/* 中のボタンは幅100% */
-.vowel-row .stButton > button {
-  width: 100%;
-  height: 56px;
-  font-size: 18px;
-  border-radius: 12px;
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-st.markdown("""
-<style>
-.candidate-scroll {
-    display: flex;
-    overflow-x: auto;
-    gap: 8px;
-    padding: 6px 0;
-}
-
-.candidate-scroll button {
-    white-space: nowrap;
-    min-width: 110px;
-    height: 48px;
-    font-size: 16px;
-    border-radius: 10px;
-}
-</style>
-""", unsafe_allow_html=True)
-
 
 # ===============================
 # Google Sheets 接続
@@ -387,29 +340,30 @@ elif st.session_state.phase == "taste_vowel_intro":
 elif st.session_state.phase == "vowel_input":
     st.write("どんな味が食べたい？")
 
-    left, right = st.columns([1, 1.2])
+    left, right = st.columns([1, 2])  # ← 比率だけ調整
 
-    # ===== 左：母音（縦） =====
+    # ===== 左：母音（縦）=====
     with left:
         for v, label in zip(
             ["a", "i", "u", "e", "o"],
             ["あ", "い", "う", "え", "お"]
         ):
-            if st.button(label, key=f"vowel_{v}", use_container_width=True):
+            if st.button(label, key=f"vowel_{v}"):
                 st.session_state.input_vowels += v
                 st.session_state.vowel_steps += 1
                 st.rerun()
 
-        if st.button("⌫", key="taste_vowel_delete", use_container_width=True):
+        if st.button("⌫", key="taste_vowel_delete"):
             if st.session_state.input_vowels:
                 st.session_state.input_vowels = st.session_state.input_vowels[:-1]
                 st.session_state.vowel_deletes += 1
             st.rerun()
 
-    # ===== 右：候補（縦） =====
+    # ===== 右：候補 =====
     with right:
         if st.session_state.input_vowels:
             candidates = []
+
             for r, j in word_dict.items():
                 v = extract_vowels(r)
                 if match_pattern(v, st.session_state.input_vowels, r):
@@ -420,17 +374,13 @@ elif st.session_state.phase == "vowel_input":
             )
 
             for idx, (r, j, v) in enumerate(candidates[:6]):
-                if st.button(
-                    j,
-                    key=f"taste_vowel_candidate_{idx}_{r}",
-                    use_container_width=True
-                ):
+                if st.button(j, key=f"taste_candidate_{idx}_{r}"):
                     st.session_state.vowel_result = j
                     st.session_state.vowel_time_end = time.time()
                     st.session_state.phase = "save_vowel"
                     st.rerun()
 
-    st.header(f"入力：{st.session_state.input_vowels}")
+    st.write(f"入力：{st.session_state.input_vowels}")
 
     if st.button("候補になかった"):
         st.session_state.vowel_time_end = time.time()
@@ -556,20 +506,20 @@ elif st.session_state.phase == "body_vowel_start":
 elif st.session_state.phase == "body_vowel_input":
     st.write("体調はどう？")
 
-    left, right = st.columns([1, 1.2])
+    left, right = st.columns([1, 2])
 
-    # ===== 左：母音（縦） =====
+    # ===== 左：母音（縦）=====
     with left:
         for v, label in zip(
             ["a", "i", "u", "e", "o"],
             ["あ", "い", "う", "え", "お"]
         ):
-            if st.button(label, key=f"body_vowel_{v}", use_container_width=True):
+            if st.button(label, key=f"body_vowel_{v}"):
                 st.session_state.body_input_vowels += v
                 st.session_state.body_vowel_steps += 1
                 st.rerun()
 
-        if st.button("⌫", key="body_vowel_delete", use_container_width=True):
+        if st.button("⌫", key="body_vowel_delete"):
             if st.session_state.body_input_vowels:
                 st.session_state.body_input_vowels = (
                     st.session_state.body_input_vowels[:-1]
@@ -592,17 +542,13 @@ elif st.session_state.phase == "body_vowel_input":
             )
 
             for idx, (r, j, v) in enumerate(candidates[:6]):
-                if st.button(
-                    j,
-                    key=f"body_vowel_candidate_{idx}_{r}",
-                    use_container_width=True
-                ):
+                if st.button(j, key=f"body_candidate_{idx}_{r}"):
                     st.session_state.body_vowel_result = j
                     st.session_state.body_vowel_time_end = time.time()
                     st.session_state.phase = "body_start"
                     st.rerun()
 
-    st.header(f"入力：{st.session_state.body_input_vowels}")
+    st.write(f"入力：{st.session_state.body_input_vowels}")
 
     if st.button("候補になかった", key="body_vowel_none"):
         st.session_state.body_vowel_time_end = time.time()
@@ -694,37 +640,4 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
-
-st.markdown("""
-<style>
-/* ===== 左右レイアウトを絶対に横にする ===== */
-.force-horizontal {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 8px;
-    width: 100%;
-}
-
-/* 左：母音（縦並びのまま） */
-.force-vowels {
-    width: 70px;
-    flex-shrink: 0;
-}
-
-.force-vowels button {
-    width: 100%;
-    min-height: 48px;
-}
-
-/* 右：候補 */
-.force-candidates {
-    flex: 1;
-}
-
-.force-candidates button {
-    width: 100%;
-    min-height: 44px;
-}
-</style>
-""", unsafe_allow_html=True)
 
