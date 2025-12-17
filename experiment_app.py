@@ -392,18 +392,14 @@ elif st.session_state.phase == "vowel_input":
 
     # ===== 左：母音（縦並び） =====
     with left:
-        cols = st.columns(5)
-        for col, v, label in zip(
-            cols,
+        for v, label in zip(
             ["a", "i", "u", "e", "o"],
             ["あ", "い", "う", "え", "お"]
         ):
-            with col:
-                if st.button(label, key=f"vowel_{v}"):
-                    st.session_state.input_vowels += v
-                    st.session_state.vowel_steps += 1
-                    st.rerun()
-
+            if st.button(label, key=f"vowel_{v}", use_container_width=True):
+                st.session_state.input_vowels += v
+                st.session_state.vowel_steps += 1
+                st.rerun()
 
         if st.button("⌫ 削除", key="taste_vowel_delete", use_container_width=True):
             if st.session_state.input_vowels:
@@ -564,18 +560,18 @@ elif st.session_state.phase == "body_vowel_input":
 
     # ===== 左：母音入力（縦並び） =====
     with left:
-        cols = st.columns(5)
-        for col, v, label in zip(
-            cols,
+        for v, label in zip(
             ["a", "i", "u", "e", "o"],
             ["あ", "い", "う", "え", "お"]
         ):
-            with col:
-                if st.button(label, key=f"body_vowel_{v}"):
-                    st.session_state.body_input_vowels += v
-                    st.session_state.body_vowel_steps += 1
-                    st.rerun()
-
+            if st.button(
+                label,
+                key=f"body_vowel_{v}",
+                use_container_width=True
+            ):
+                st.session_state.body_input_vowels += v
+                st.session_state.body_vowel_steps += 1
+                st.rerun()
 
         if st.button(
             "⌫ 削除",
@@ -701,17 +697,4 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
-
-
-
-
-
-
-
-
-
-
-
-
-
 
