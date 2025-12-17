@@ -525,7 +525,7 @@ elif st.session_state.phase == "body_free_input":
 
     if st.button("決定"):
         if st.session_state.body_yesno_free_text.strip():
-            st.session_state.phase = "body_vowel_start"
+            st.session_state.phase = "save_body"
             st.rerun()
         else:
             st.warning("入力してください")
@@ -641,7 +641,7 @@ elif st.session_state.phase == "body_vowel_free_input":
         st.session_state.body_yesno_free_text = body_free  # 自由入力テキスト
         st.session_state.body_yesno_time_end = st.session_state.body_yesno_time_end or time.time()
         st.session_state.body_vowel_time_end = st.session_state.body_vowel_time_end or time.time()
-        st.session_state.phase = "body_yesno_after_vowel_intro"
+        st.session_state.phase = "body_start"
         st.rerun()
         
 elif st.session_state.phase == "save_body":
@@ -696,5 +696,6 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
 
 
