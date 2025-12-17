@@ -373,31 +373,38 @@ elif st.session_state.phase == "taste_vowel_intro":
 elif st.session_state.phase == "vowel_input":
     st.write("どんな味が食べたい？")
 
-    st.markdown('<div class="force-horizontal">', unsafe_allow_html=True)
+    # 左：母音ボタン（横並び）
+    cols = st.columns(5)
+    for col, label, v in zip(cols, ["あ","い","う","え","お"], ["a","i","u","e","o"]):
+        if col.button(label, key=f"vowel_{v}"):
+            st.session_state.input_vowels += v
+            st.session_state.vowel_steps += 1
+            st.rerun()
 
-col_left, col_right = st.columns([1, 3])
-
-# 左：母音
-for label, v in zip(["あ","い","う","え","お"], ["a","i","u","e","o"]):
-    if col_left.button(label, key=f"vowel_{v}"):
-        st.session_state.input_vowels += v
-        st.session_state.vowel_steps += 1
+    # 削除ボタン
+    if st.button("⌫", key="taste_vowel_delete"):
+        if st.session_state.input_vowels:
+            st.session_state.input_vowels = st.session_state.input_vowels[:-1]
+            st.session_state.vowel_deletes += 1
         st.rerun()
 
-# 右：候補
-if st.session_state.input_vowels:
-    candidates = []
-    for r,j in word_dict.items():
-        v = extract_vowels(r)
-        if match_pattern(v, st.session_state.input_vowels, r):
-            candidates.append((r,j,v))
-    candidates.sort(key=lambda x: sort_key(x, st.session_state.input_vowels))
-    for idx, (r,j,v) in enumerate(candidates[:6]):
-        if col_right.button(j, key=f"taste_candidate_{idx}_{r}"):
-            st.session_state.vowel_result = j
-            st.session_state.vowel_time_end = time.time()
-            st.session_state.phase = "save_vowel"
-            st.rerun()
+    # 右：候補ボタン
+    if st.session_state.input_vowels:
+        candidates = []
+        for r, j in word_dict.items():
+            v = extract_vowels(r)
+            if match_pattern(v, st.session_state.input_vowels, r):
+                candidates.append((r, j, v))
+
+        candidates.sort(key=lambda x: sort_key(x, st.session_state.input_vowels))
+
+        # 候補ボタンを縦に並べる場合
+        for idx, (r, j, v) in enumerate(candidates[:6]):
+            if st.button(j, key=f"taste_candidate_{idx}_{r}"):
+                st.session_state.vowel_result = j
+                st.session_state.vowel_time_end = time.time()
+                st.session_state.phase = "save_vowel"
+                st.rerun()
 
     st.write(f"入力：{st.session_state.input_vowels}")
 
@@ -405,6 +412,7 @@ if st.session_state.input_vowels:
         st.session_state.vowel_time_end = time.time()
         st.session_state.phase = "vowel_free_input"
         st.rerun()
+
 
 
 # ===============================
@@ -525,17 +533,16 @@ elif st.session_state.phase == "body_vowel_start":
 elif st.session_state.phase == "body_vowel_input":
     st.write("体調はどう？")
 
-    col_left, col_right = st.columns([1, 3])  # 左：母音、右：候補
-
-    # 左：母音ボタン
-    for label, v in zip(["あ","い","う","え","お"], ["a","i","u","e","o"]):
-        if col_left.button(label, key=f"body_vowel_{v}"):
+    # 左：母音ボタン（横並び）
+    cols = st.columns(5)
+    for col, label, v in zip(cols, ["あ","い","う","え","お"], ["a","i","u","e","o"]):
+        if col.button(label, key=f"body_vowel_{v}"):
             st.session_state.body_input_vowels += v
             st.session_state.body_vowel_steps += 1
             st.rerun()
 
-    # 左：削除ボタン
-    if col_left.button("⌫", key="body_vowel_delete"):
+    # 削除ボタン
+    if st.button("⌫", key="body_vowel_delete"):
         if st.session_state.body_input_vowels:
             st.session_state.body_input_vowels = st.session_state.body_input_vowels[:-1]
             st.session_state.body_vowel_deletes += 1
@@ -544,23 +551,25 @@ elif st.session_state.phase == "body_vowel_input":
     # 右：候補ボタン
     if st.session_state.body_input_vowels:
         candidates = []
-        for r,j in word_dict.items():
+        for r, j in word_dict.items():
             v = extract_vowels(r)
             if match_pattern(v, st.session_state.body_input_vowels, r):
-                candidates.append((r,j,v))
+                candidates.append((r, j, v))
+
         candidates.sort(key=lambda x: sort_key(x, st.session_state.body_input_vowels))
 
-        for idx, (r,j,v) in enumerate(candidates[:6]):
-            if col_right.button(j, key=f"body_candidate_{idx}_{r}"):
+        # 候補ボタンを縦に並べる場合
+        for idx, (r, j, v) in enumerate(candidates[:6]):
+            if st.button(j, key=f"body_candidate_{idx}_{r}"):
                 st.session_state.body_vowel_result = j
                 st.session_state.body_vowel_time_end = time.time()
-                st.session_state.phase = "body_start"
+                st.session_state.phase = "body_start"  # 次のフェーズ
                 st.rerun()
 
     st.write(f"入力：{st.session_state.body_input_vowels}")
 
     # 候補になかった場合
-    if col_right.button("候補になかった", key="body_vowel_none"):
+    if st.button("候補になかった", key="body_vowel_none"):
         st.session_state.body_vowel_time_end = time.time()
         st.session_state.phase = "body_vowel_free_input"
         st.rerun()
@@ -651,7 +660,3 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
-
-
-
-
