@@ -309,7 +309,6 @@ battiri,バッチリ
 karui,軽い
 omoi,重い
 yawarakai,やわらかい
-katai,かたい
 shibire,しびれる
 tumetai,冷たい
 atsui,あつい
