@@ -193,10 +193,6 @@ ii,いい
 sore,それ
 are,あれ
 kore,これ
-doko,どこ
-itsu,いつ
-naze,なぜ
-dou,どう
 ikura,いくら
 ikutsu,いくつ
 dore,どれ
@@ -282,7 +278,6 @@ kotteri,こってり
 assari,あっさり
 koi,濃い
 usui,薄い
-mattari,まったり
 kudoi,くどい
 maroyaka,まろやか
 pirikara,ピリ辛
