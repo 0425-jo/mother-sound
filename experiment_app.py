@@ -213,6 +213,9 @@ if "experiment_id" not in st.session_state:
     
 if "age_group" not in st.session_state:
     st.session_state.age_group = ""
+    
+if "vowel_ui_eval" not in st.session_state:
+    st.session_state.vowel_ui_eval = ""
 
 # ---------- 味覚 ----------
 for key, default in {
@@ -699,6 +702,7 @@ elif st.session_state.phase == "save_body":
             body_vowel_duration,
 
             st.session_state.age_group,
+             st.session_state.vowel_ui_eval,
         ])
 
         st.session_state.saved = True
@@ -706,8 +710,28 @@ elif st.session_state.phase == "save_body":
     st.success("すべて完了しました！")
     st.write("ご協力ありがとうございました。\n最初に戻るを押してから終えてください！")
 
+    st.markdown("---")
+    st.subheader("最後に、操作について教えてください")
+    
+    st.session_state.vowel_ui_eval = st.radio(
+        "母音入力はわかりやすかったですか？",
+        [
+            "すぐできたし難しくなかった",
+            "例を見れば難しくなかった",
+            "試しながらなら分かった",
+            "わからなかった"
+        ],
+        index=None
+    )
+
+
     if st.button("最初に戻る"):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.rerun()
+        if not st.session_state.vowel_ui_eval:
+            st.warning("アンケートへの回答をお願いします")
+        else:
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            st.rerun()
+
+
 
