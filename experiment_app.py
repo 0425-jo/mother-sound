@@ -210,6 +210,9 @@ if "phase" not in st.session_state:
 
 if "experiment_id" not in st.session_state:
     st.session_state.experiment_id = ""
+    
+if "age_group" not in st.session_state:
+    st.session_state.age_group = ""
 
 # ---------- 味覚 ----------
 for key, default in {
@@ -278,9 +281,18 @@ if st.session_state.phase == "id_input":
     st.write("質問に対して一番最初に思ったものを直感で選択してください。")
     st.write("ニックネーム、入力時間、選択結果などの情報は保存されます。研究に使うのでできるだけ真面目に答えてください！")
     st.session_state.experiment_id = st.text_input("ニックネーム")
+    st.session_state.age_group = st.selectbox(
+        "年齢",
+        ["", "10代", "20代", "30代", "40代", "50代", "60代以上"]
+    )
+
 
     if st.button("スタート"):
-        if st.session_state.experiment_id.strip():
+        if (
+        st.session_state.experiment_id.strip()
+        and st.session_state.age_group
+    ):
+
             st.session_state.taste_list = random.sample(
                 ["あまい", "からい", "すっぱい", "しょっぱい", "にがい"], 5
             )
@@ -289,7 +301,7 @@ if st.session_state.phase == "id_input":
             st.session_state.phase = "taste_vowel_intro"
             st.rerun()
         else:
-            st.warning("ニックネームを入力してください")
+            st.warning("ニックネームと年齢を入力してください")
 # ===============================
 # 2. 味覚 YES / NO
 # ===============================
@@ -685,6 +697,8 @@ elif st.session_state.phase == "save_body":
             st.session_state.body_vowel_steps,
             st.session_state.body_vowel_deletes,
             body_vowel_duration,
+
+            st.session_state.age_group,
         ])
 
         st.session_state.saved = True
@@ -696,8 +710,4 @@ elif st.session_state.phase == "save_body":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
-
-
-
-
 
