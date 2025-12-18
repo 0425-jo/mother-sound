@@ -1,6 +1,3 @@
-banana,バナナ
-okashi,お菓子
-rinngo,リンゴ
 hai,はい
 iie,いいえ
 wakaranai,わからない
