@@ -184,7 +184,6 @@ kawaii,かわいい
 kowai,怖い
 urusai,うるさい
 shizuka,静か
-hayai,はやい
 osoi,遅い
 isogashii,忙しい
 kusai,くさい
@@ -205,7 +204,6 @@ tabunn,たぶん
 kitto,きっと
 tokidoki,時々
 yoku,よく
-tamani,たまに
 zennzenn,全然
 totemo,とても
 chotto,ちょっと
@@ -247,7 +245,6 @@ pa-fekuto,パーフェクト
 doa,ドア
 sofa,ソファ
 isu,椅子
-kagami,鏡
 denki,電気
 kasa,傘
 senntakki,洗濯機
