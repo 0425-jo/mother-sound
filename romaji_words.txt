@@ -15,7 +15,6 @@ kayui,かゆい
 tsurai,つらい
 darui,だるい
 samui,寒い
-atsui,暑い
 nodogakawaita,のどが渇いた
 onakagasuita,お腹がすいた
 onaka,お腹
@@ -190,8 +189,6 @@ osoi,遅い
 isogashii,忙しい
 kusai,くさい
 hima,暇
-omoi,重い
-karui,軽い
 warui,悪い
 ii,いい
 sore,それ
@@ -307,7 +304,6 @@ sukkiri,すっきり
 kafunnsho,花粉症
 netsuari,熱あり
 samui,寒い
-atsui,暑い
 okkiteiru,起きている
 nemuritai,眠りたい
 shokuyokuari,食欲あり
@@ -324,7 +320,7 @@ yawarakai,やわらかい
 katai,かたい
 shibire,しびれる
 tumetai,冷たい
-atsui,熱い
+atsui,あつい
 yowai,弱い
 tsuyoi,強い
 futsuu,普通
