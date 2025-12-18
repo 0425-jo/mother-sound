@@ -678,55 +678,56 @@ elif st.session_state.phase == "save_body":
     )
 
 
-if st.button("最初に戻る"):
-    if not st.session_state.vowel_ui_eval:
-        st.warning("アンケートへの回答をお願いします")
-    else:
-        if not st.session_state.saved:
-            # ===== 時間計算 =====
-            body_yesno_start = st.session_state.body_yesno_time_start or time.time()
-            body_yesno_end   = st.session_state.body_yesno_time_end   or time.time()
-            body_yesno_duration = round(body_yesno_end - body_yesno_start, 2)
-
-            body_vowel_start = st.session_state.body_vowel_time_start or time.time()
-            body_vowel_end   = st.session_state.body_vowel_time_end   or time.time()
-            body_vowel_duration = round(body_vowel_end - body_vowel_start, 2)
-
-            append_row([
-                st.session_state.experiment_id,
-                st.session_state.taste_result,
-                st.session_state.taste_free_text,
-                st.session_state.taste_steps,
-                round(
-                    st.session_state.taste_time_end
-                    - st.session_state.taste_time_start,
-                    2
-                ),
-                st.session_state.vowel_result,
-                st.session_state.vowel_free_text,
-                st.session_state.vowel_steps,
-                st.session_state.vowel_deletes,
-                round(
-                    st.session_state.vowel_time_end
-                    - st.session_state.vowel_time_start,
-                    2
-                ),
-                st.session_state.body_yesno_result,
-                st.session_state.body_yesno_free_text,
-                st.session_state.body_steps,
-                body_yesno_duration,
-                st.session_state.body_vowel_result,
-                st.session_state.body_vowel_free_text,
-                st.session_state.body_vowel_steps,
-                st.session_state.body_vowel_deletes,
-                body_vowel_duration,
-
-                st.session_state.age_group,
-                st.session_state.vowel_ui_eval,   # ← ★ここで確実に入る
-            ])
-
-            st.session_state.saved = True
-
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.rerun()
+    if st.button("最初に戻る"):
+        if not st.session_state.vowel_ui_eval:
+            st.warning("アンケートへの回答をお願いします")
+        else:
+            if not st.session_state.saved:
+                # ===== 時間計算 =====
+                body_yesno_start = st.session_state.body_yesno_time_start or time.time()
+                body_yesno_end   = st.session_state.body_yesno_time_end   or time.time()
+                body_yesno_duration = round(body_yesno_end - body_yesno_start, 2)
+    
+                body_vowel_start = st.session_state.body_vowel_time_start or time.time()
+                body_vowel_end   = st.session_state.body_vowel_time_end   or time.time()
+                body_vowel_duration = round(body_vowel_end - body_vowel_start, 2)
+    
+                append_row([
+                    st.session_state.experiment_id,
+                    st.session_state.taste_result,
+                    st.session_state.taste_free_text,
+                    st.session_state.taste_steps,
+                    round(
+                        st.session_state.taste_time_end
+                        - st.session_state.taste_time_start,
+                        2
+                    ),
+                    st.session_state.vowel_result,
+                    st.session_state.vowel_free_text,
+                    st.session_state.vowel_steps,
+                    st.session_state.vowel_deletes,
+                    round(
+                        st.session_state.vowel_time_end
+                        - st.session_state.vowel_time_start,
+                        2
+                    ),
+                    st.session_state.body_yesno_result,
+                    st.session_state.body_yesno_free_text,
+                    st.session_state.body_steps,
+                    body_yesno_duration,
+                    st.session_state.body_vowel_result,
+                    st.session_state.body_vowel_free_text,
+                    st.session_state.body_vowel_steps,
+                    st.session_state.body_vowel_deletes,
+                    body_vowel_duration,
+    
+                    st.session_state.age_group,
+                    st.session_state.vowel_ui_eval,   # ← ★ここで確実に入る
+                ])
+    
+                st.session_state.saved = True
+    
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            st.rerun()
+    
