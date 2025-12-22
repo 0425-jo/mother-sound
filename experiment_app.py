@@ -228,10 +228,10 @@ if "saved" not in st.session_state:
 
 # =============================== 1. ID入力 ===============================
 if st.session_state.phase == "id_input":
-    st.title("入力実験(1分とかで終わる！）")
-    st.header("これから2つの質問に答えてください。")
-    st.write("質問に対して一番最初に思ったものを直感で選択してください。")
-    st.write("ニックネーム、入力時間、選択結果などの情報は保存されます。研究に使うのでできるだけ真面目に答えてください！")
+    st.title("１分で終わる入力実験です")
+    st.header("これから2つの質問に答えてもらいます")
+    st.header("思いついたものを、*考えすぎず直感で*選んでください")
+    st.write("ニックネーム、入力時間、選択結果などは研究目的で保存されます")
     st.session_state.experiment_id = st.text_input("ニックネーム")
     st.session_state.age_group = st.selectbox("年齢", ["", "10代", "20代", "30代", "40代", "50代", "60代以上"])
 
@@ -247,11 +247,11 @@ if st.session_state.phase == "id_input":
 
 # =============================== 味覚 母音入力 開始 ===============================
 elif st.session_state.phase == "taste_vowel_intro":
-    st.header("第1問:今どんな味のものが食べたいですか？今思っている直感です！")
-    st.header("ただし母音のみで答えてください。")
-    st.write("母音を入力したうえで候補になかった場合,下にある候補になかったを押してください。")
-    st.write("ただし、ん＝う、じゃ＝あ、としてください")
-    st.write("例）あまい→ああい,しょっぱい→おあい,あまずっぱい→ああうあい,パーフェクト→ああえうお")
+    st.header("第1問:今、どんな味のものが食べたい？")
+    st.header("*母音だけ*で答えてください。")
+    st.write("画面左の「あいうえお」を押して入力します")
+    st.markdown("例）あまい→ああい,しょっぱい→おあい,あまずっぱい→ああうあい,パーフェクト→ああえうお")
+    st.write("※ん＝う、じゃ＝あ、としてください")
 
     if st.button("母音入力を始める"):
         st.session_state.input_vowels = ""
@@ -544,3 +544,4 @@ elif st.session_state.phase == "save_body":
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
+
