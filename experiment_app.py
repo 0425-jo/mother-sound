@@ -230,8 +230,7 @@ if "saved" not in st.session_state:
 if st.session_state.phase == "id_input":
     st.title("１分で終わる入力実験です")
     st.header("これから2つの質問に答えてもらいます")
-    st.header("思いついたものを、")
-    st.header("**「考えすぎず直感で」**選んでください")
+    st.header("思ったものを**「考えすぎず直感で」**選んでください")
     st.write("ニックネーム、入力時間、選択結果などは研究目的で保存されます")
     st.session_state.experiment_id = st.text_input("ニックネーム")
     st.session_state.age_group = st.selectbox("年齢", ["", "10代", "20代", "30代", "40代", "50代", "60代以上"])
@@ -547,6 +546,7 @@ elif st.session_state.phase == "save_body":
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
+
 
 
 
