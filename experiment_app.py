@@ -264,7 +264,6 @@ elif st.session_state.phase == "taste_vowel_intro":
 # =============================== 味覚 母音入力 本体（スマホでも横並び！）===============================
 elif st.session_state.phase == "vowel_input":
     st.write("どんな味が食べたい？")
-    st.write("思いついた単語の母音を順番に入力してください")
     st.write("※「ん」=「う」/「じゃ」= 「あ」として入力してください")
     st.write("※当てはまるものがない場合は、「候補になかった」を押してください")
 
@@ -384,6 +383,7 @@ elif st.session_state.phase == "body_vowel_start":
     st.header("第2問：今の体調はどうですか？")
     st.header("さっきと同じく「母音のみ」で答えてください。")
     st.write("例）だるい→あうい / すっきり→ういい / ねむい→えうい / パーフェクト→ああうえお")
+    st.write("※「ん」=「う」/「じゃ」= 「あ」として入力してください")
 
     if st.button("母音入力を始める"):
         st.session_state.body_input_vowels = ""
@@ -396,7 +396,6 @@ elif st.session_state.phase == "body_vowel_start":
 # =============================== 体調 母音入力 本体（スマホでも横並び！）===============================
 elif st.session_state.phase == "body_vowel_input":
     st.write("体調はどう？")
-    st.write("思いついた単語の母音を順番に入力してください")
     st.write("※「ん」=「う」/「じゃ」= 「あ」として入力してください")
     st.write("※当てはまるものがない場合は、「候補になかった」を押してください")
 
@@ -550,6 +549,7 @@ elif st.session_state.phase == "save_body":
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
+
 
 
 
