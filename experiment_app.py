@@ -230,7 +230,7 @@ if "saved" not in st.session_state:
 if st.session_state.phase == "id_input":
     st.title("１分で終わる入力実験です")
     st.header("これから2つの質問に答えてもらいます")
-    st.header("思いついたものを、*考えすぎず直感で*選んでください")
+    st.header("思いついたものを、**考えすぎず直感で**選んでください")
     st.write("ニックネーム、入力時間、選択結果などは研究目的で保存されます")
     st.session_state.experiment_id = st.text_input("ニックネーム")
     st.session_state.age_group = st.selectbox("年齢", ["", "10代", "20代", "30代", "40代", "50代", "60代以上"])
@@ -250,8 +250,8 @@ elif st.session_state.phase == "taste_vowel_intro":
     st.header("第1問:今、どんな味のものが食べたい？")
     st.header("*母音だけ*で答えてください。")
     st.write("画面左の「あいうえお」を押して入力します")
-    st.markdown("例）あまい→ああい,しょっぱい→おあい,あまずっぱい→ああうあい,パーフェクト→ああえうお")
-    st.write("※ん＝う、じゃ＝あ、としてください")
+    st.markdown("例:あまい→ああい　/ しょっぱい→おあい / あまずっぱい→ああうあい / こってり→おえい")
+    st.write("※「ん」=「う」/「じゃ」= 「あ」として入力してください")
 
     if st.button("母音入力を始める"):
         st.session_state.input_vowels = ""
@@ -264,6 +264,8 @@ elif st.session_state.phase == "taste_vowel_intro":
 # =============================== 味覚 母音入力 本体（スマホでも横並び！）===============================
 elif st.session_state.phase == "vowel_input":
     st.write("どんな味が食べたい？")
+    st.write("思いついた単語の母音を順番に入力してください")
+    st.write("※当てはまるものがない場合は、「候補になかった」を押してください")
 
     # 強制横並びコンテナ
     st.markdown('<div class="vowel-main-container">', unsafe_allow_html=True)
@@ -311,7 +313,7 @@ elif st.session_state.phase == "vowel_input":
 
 # =============================== 味覚 母音 自由入力 ===============================
 elif st.session_state.phase == "vowel_free_input":
-    st.header("どんな気分でしたか？")
+    st.header("では、どんな味が食べたい気分でしたか？")
     st.session_state.vowel_free_text = st.text_input("自由入力")
     if st.button("決定"):
         if st.session_state.vowel_free_text.strip():
@@ -334,8 +336,8 @@ elif st.session_state.phase == "taste_yesnoima":
         st.rerun()
     current = tastes[idx]
     st.header("また、同じ質問をします！")
-    st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
-    st.write("さっき答えた味覚と同じのが出るまでNOを押し続けて、ない場合その後入力してください！")
+    st.write("当てはまれば YES,違えば NO を押してください")
+    st.write("さっき答えた味覚と同じのが出るまでNOを押し続けてください")
     if st.button("スタート"):
         st.session_state.taste_time_start = time.time()
         st.session_state.phase = "taste_checking"
@@ -378,10 +380,9 @@ elif st.session_state.phase == "taste_free_input":
 
 # =============================== 体調 母音入力 開始 ===============================
 elif st.session_state.phase == "body_vowel_start":
-    st.header("第2問：今の体調はどうですか？これも今思う直感です！")
-    st.header("ただし母音のみで答えてください。")
-    st.write("母音を入力したうえで候補になかった場合,下にある候補になかったを押してください。")
-    st.write("例）だるい→あうい,すっきり→ういい,ねむい→えうい,パーフェクト→ああうえお")
+    st.header("第2問：今の体調はどうですか？")
+    st.header("さっきと同じく「母音のみ」で答えてください。")
+    st.write("例）だるい→あうい / すっきり→ういい / ねむい→えうい / パーフェクト→ああうえお")
 
     if st.button("母音入力を始める"):
         st.session_state.body_input_vowels = ""
@@ -452,7 +453,8 @@ elif st.session_state.phase == "body_start":
     st.session_state.body_steps = 0
 
     st.header("また、同じ質問をします！")
-    st.write("当てはまるものでYES,当てはまらなかったらNOを押してください")
+    st.write("当てはまれば YES,違えば NO を押してください")
+    st.write("さっき答えた味覚と同じのが出るまでNOを押し続けてください")
     if st.button("スタート"):
         st.session_state.body_yesno_time_start = time.time()
         st.session_state.phase = "body_yesno_check"
@@ -499,7 +501,7 @@ elif st.session_state.phase == "save_body":
     st.subheader("最後に、操作について教えてください")
     st.session_state.vowel_ui_eval = st.radio(
         "母音入力はわかりやすかったですか？",
-        ["すぐできたし難しくなかった", "例を見れば難しくなかった", "試しながらなら分かった", "わからなかった"],
+        ["説明を読まずとも直感的に使えた", "例を見ればすぐ理解できた", "試しながら使い方が分かった", "最後までよくわからなかった"],
         index=None
     )
 
@@ -544,4 +546,5 @@ elif st.session_state.phase == "save_body":
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
+
 
