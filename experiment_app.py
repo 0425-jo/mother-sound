@@ -21,81 +21,6 @@ def get_worksheet():
     sh = gc.open_by_key(SPREADSHEET_ID)
     return sh.sheet1
     
-st.markdown("""
-<style>
-/* ============================= */
-/* スマホ縦画面でも強制横並び！ */
-/* ============================= */
-.vowel-main-container {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 12px;
-    padding: 8px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-}
-.vowel-main-container::-webkit-scrollbar {
-    display: none;
-}
-
-/* 左：母音ボタンエリア */
-.vowel-left {
-    flex: 0 0 105px !important;   /* スマホでも十分な幅確保 */
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-/* 右：候補ボタンエリア */
-.vowel-right {
-    flex: 1;
-    min-width: 180px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-/* 母音ボタン（あいうえお） */
-.vowel-left .stButton > button {
-    height: 62px !important;
-    font-size: 22px !important;
-    font-weight: bold !important;
-    border-radius: 14px !important;
-}
-
-/* 削除ボタン */
-.vowel-left .stButton button[kind="secondary"] {
-    background-color: #ff4444 !important;
-    color: white !important;
-}
-
-/* 候補ボタン（小さめでも見やすい） */
-.vowel-right .stButton > button {
-    height: 56px !important;
-    font-size: 17px !important;
-    border-radius: 12px !important;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* スマホ縦画面でも絶対に折れないように */
-@media (max-width: 640px) {
-    .vowel-main-container {
-        flex-direction: row !important;
-        gap: 10px;
-        padding: 6px;
-    }
-    .vowel-left {
-        flex: 0 0 98px !important;
-    }
-    .vowel-right {
-        min-width: 170px;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
 
 # =============================== Google Sheets 接続 ===============================
 SPREADSHEET_ID = "1V8eSJwIuwHEWktTsU8VFZlSOzXuM0jUqa8jTjv1vbxQ"
@@ -264,49 +189,46 @@ elif st.session_state.phase == "taste_vowel_intro":
 # =============================== 味覚 母音入力 本体（スマホでも横並び！）===============================
 elif st.session_state.phase == "vowel_input":
     st.write("どんな味が食べたい？")
-    st.write("※「ん」=「う」/「じゃ」= 「あ」として入力してください")
-    st.write("※当てはまるものがない場合は、「候補になかった」を押してください")
+    st.caption("※「ん」=「う」 / 「じゃ」=「あ」")
 
-    # 強制横並びコンテナ
-    st.markdown('<div class="vowel-main-container">', unsafe_allow_html=True)
-    col1, col2 = st.columns([1, 2])
-
-    with col1:
-        st.markdown('<div class="vowel-left">', unsafe_allow_html=True)
-        for v, label in zip(["a", "i", "u", "e", "o"], ["あ", "い", "う", "え", "お"]):
-            if st.button(label, key=f"vowel_{v}", use_container_width=True):
-                st.session_state.input_vowels += v
-                st.session_state.vowel_steps += 1
-                st.rerun()
-        if st.button("削除", key="taste_vowel_delete", use_container_width=True):
-            if st.session_state.input_vowels:
-                st.session_state.input_vowels = st.session_state.input_vowels[:-1]
-                st.session_state.vowel_deletes += 1
+    # ① 母音ボタン
+    for v, label in zip(["a", "i", "u", "e", "o"], ["あ", "い", "う", "え", "お"]):
+        if st.button(label, use_container_width=True):
+            st.session_state.input_vowels += v
+            st.session_state.vowel_steps += 1
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
 
-    with col2:
-        st.markdown('<div class="vowel-right">', unsafe_allow_html=True)
+    # ② 削除
+    if st.button("削除", use_container_width=True):
         if st.session_state.input_vowels:
-            candidates = []
-            for r, j in word_dict.items():
-                v = extract_vowels(r)
-                if match_pattern(v, st.session_state.input_vowels, r):
-                    candidates.append((r, j, v))
-            candidates.sort(key=lambda x: sort_key(x, st.session_state.input_vowels))
-            for idx, (r, j, v) in enumerate(candidates[:6]):
-                if st.button(j, key=f"taste_cand_{idx}_{r}", use_container_width=True):
-                    st.session_state.vowel_result = j
-                    st.session_state.vowel_time_end = time.time()
-                    st.session_state.phase = "save_vowel"
-                    st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
+            st.session_state.input_vowels = st.session_state.input_vowels[:-1]
+            st.session_state.vowel_deletes += 1
+        st.rerun()
 
-    st.markdown('</div>', unsafe_allow_html=True)  # vowel-main-container 閉じ
+    st.markdown("---")
 
-    st.header(f"入力：{st.session_state.input_vowels}")
+    # ③ 入力確認表示
+    st.subheader(f"入力：{st.session_state.input_vowels}")
 
-    if st.button("候補になかった", key="taste_vowel_none"):
+    # ④ 候補群
+    if st.session_state.input_vowels:
+        candidates = []
+        for r, j in word_dict.items():
+            v = extract_vowels(r)
+            if match_pattern(v, st.session_state.input_vowels, r):
+                candidates.append((r, j, v))
+
+        candidates.sort(key=lambda x: sort_key(x, st.session_state.input_vowels))
+
+        for idx, (r, j, v) in enumerate(candidates[:6]):
+            if st.button(j, key=f"taste_cand_{idx}_{r}", use_container_width=True):
+                st.session_state.vowel_result = j
+                st.session_state.vowel_time_end = time.time()
+                st.session_state.phase = "save_vowel"
+                st.rerun()
+
+    # ⑤ 候補になかった
+    if st.button("候補になかった", use_container_width=True):
         st.session_state.vowel_time_end = time.time()
         st.session_state.phase = "vowel_free_input"
         st.rerun()
@@ -395,52 +317,60 @@ elif st.session_state.phase == "body_vowel_start":
 
 # =============================== 体調 母音入力 本体（スマホでも横並び！）===============================
 elif st.session_state.phase == "body_vowel_input":
-    st.write("体調はどう？")
-    st.write("※「ん」=「う」/「じゃ」= 「あ」として入力してください")
-    st.write("※当てはまるものがない場合は、「候補になかった」を押してください")
+    st.write("今の体調に一番近いものを、母音で入力してください")
+    st.caption("※「ん」=「う」 / 「だるい」→「あうい」など")
 
-    st.markdown('<div class="vowel-main-container">', unsafe_allow_html=True)
-    col1, col2 = st.columns([1, 2])
-
-    with col1:
-        st.markdown('<div class="vowel-left">', unsafe_allow_html=True)
-        for v, label in zip(["a", "i", "u", "e", "o"], ["あ", "い", "う", "え", "お"]):
-            if st.button(label, key=f"body_v_{v}", use_container_width=True):
-                st.session_state.body_input_vowels += v
-                st.session_state.body_vowel_steps += 1
-                st.rerun()
-        if st.button("削除", key="body_vowel_delete", use_container_width=True):
-            if st.session_state.body_input_vowels:
-                st.session_state.body_input_vowels = st.session_state.body_input_vowels[:-1]
-                st.session_state.body_vowel_deletes += 1
+    # ① 母音ボタン
+    for v, label in zip(["a", "i", "u", "e", "o"], ["あ", "い", "う", "え", "お"]):
+        if st.button(label, key=f"body_vowel_{v}", use_container_width=True):
+            st.session_state.body_input_vowels += v
+            st.session_state.body_vowel_steps += 1
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
 
-    with col2:
-        st.markdown('<div class="vowel-right">', unsafe_allow_html=True)
+    # ② 削除
+    if st.button("削除", key="body_delete", use_container_width=True):
         if st.session_state.body_input_vowels:
-            candidates = []
-            for r, j in word_dict.items():
-                v = extract_vowels(r)
-                if match_pattern(v, st.session_state.body_input_vowels, r):
-                    candidates.append((r, j, v))
-            candidates.sort(key=lambda x: sort_key(x, st.session_state.body_input_vowels))
-            for idx, (r, j, v) in enumerate(candidates[:6]):
-                if st.button(j, key=f"body_cand_{idx}_{r}", use_container_width=True):
-                    st.session_state.body_vowel_result = j
-                    st.session_state.body_vowel_time_end = time.time()
-                    st.session_state.phase = "body_start"
-                    st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    st.header(f"入力：{st.session_state.body_input_vowels}")
-
-    if st.button("候補になかった", key="body_vowel_none"):
-        st.session_state.body_vowel_time_end = time.time()
-        st.session_state.phase = "body_vowel_free_input"
+            st.session_state.body_input_vowels = st.session_state.body_input_vowels[:-1]
+            st.session_state.body_vowel_deletes += 1
         st.rerun()
+
+    st.markdown("---")
+
+    # ③ 入力確認
+    st.subheader(f"入力：{st.session_state.body_input_vowels}")
+
+    # ④ 候補表示
+    if st.session_state.body_input_vowels:
+        candidates = []
+        for r, j in body_word_dict.items():
+            v = extract_vowels(r)
+            if match_pattern(v, st.session_state.body_input_vowels, r):
+                candidates.append((r, j, v))
+
+        candidates.sort(
+            key=lambda x: sort_key(x, st.session_state.body_input_vowels)
+        )
+
+        if len(candidates) == 0:
+            st.info("該当する候補がありません")
+
+        for idx, (r, j, v) in enumerate(candidates[:6]):
+            if st.button(
+                j,
+                key=f"body_cand_{idx}_{r}",
+                use_container_width=True
+            ):
+                st.session_state.body_result = j
+                st.session_state.body_time_end = time.time()
+                st.session_state.phase = "save_body"
+                st.rerun()
+
+    # ⑤ 候補になかった
+    if st.button("候補になかった", key="body_not_found", use_container_width=True):
+        st.session_state.body_time_end = time.time()
+        st.session_state.phase = "body_free_input"
+        st.rerun()
+
 
 # =============================== 体調 母音 自由入力 ===============================
 elif st.session_state.phase == "body_vowel_free_input":
@@ -549,6 +479,7 @@ elif st.session_state.phase == "save_body":
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
+
 
 
 
