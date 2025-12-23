@@ -361,15 +361,15 @@ elif st.session_state.phase == "body_vowel_input":
                 key=f"body_cand_{idx}_{r}",
                 use_container_width=True
             ):
-                st.session_state.body_result = j
-                st.session_state.body_time_end = time.time()
+                st.session_state.body_vowel_result = j
+                st.session_state.body_vowel_time_end = time.time()
                 st.session_state.phase = "body_start"
                 st.rerun()
 
     # ⑤ 候補になかった
     if st.button("候補になかった", key="body_not_found", use_container_width=True):
-        st.session_state.body_time_end = time.time()
-        st.session_state.phase = "body_free_input"
+        st.session_state.body_vowel_time_end = time.time()
+        st.session_state.phase = "body_vowel_free_input"
         st.rerun()
 
 
@@ -385,7 +385,10 @@ elif st.session_state.phase == "body_start":
     st.session_state.body_list = random.sample(["ねむい", "つかれた","げんき","しんどい","いそがしい"], 5)
     st.session_state.body_index = 0
     st.session_state.body_steps = 0
-
+    st.session_state.phase = "body_start"
+    st.rerun()
+    
+elif st.session_state.phase == "body_start":
     st.header("また、同じ質問をします！")
     st.write("当てはまれば YES,違えば NO を押してください")
     st.write("さっき答えた味覚と同じのが出るまでNOを押し続けてください")
@@ -480,6 +483,7 @@ elif st.session_state.phase == "save_body":
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
+
 
 
 
