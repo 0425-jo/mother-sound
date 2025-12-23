@@ -115,13 +115,21 @@ if "age_group" not in st.session_state:
 if "vowel_ui_eval" not in st.session_state:
     st.session_state.vowel_ui_eval = ""
 
-# 味覚系
+# ---------------------------
+# 味覚系 session_state 初期化
+# ---------------------------
 for key, default in {
-    "taste_list": [], "taste_index": 0, "body_steps": 0, "taste_result": None,
-    "taste_free_text": "", "taste_time_start": None, "taste_time_end": None, "taste_steps": 0,
+    "taste_list": [],
+    "taste_index": 0,
+    "taste_result": None,
+    "taste_free_text": "",
+    "taste_time_start": None,
+    "taste_time_end": None,
+    "taste_steps": 0,
 }.items():
     if key not in st.session_state:
         st.session_state[key] = default
+
 
 # 母音（味覚）
 for key, default in {
@@ -483,6 +491,7 @@ elif st.session_state.phase == "save_body":
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
+
 
 
 
