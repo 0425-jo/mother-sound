@@ -363,7 +363,7 @@ elif st.session_state.phase == "body_vowel_input":
             ):
                 st.session_state.body_result = j
                 st.session_state.body_time_end = time.time()
-                st.session_state.phase = "save_body"
+                st.session_state.phase = "body_start"
                 st.rerun()
 
     # ⑤ 候補になかった
@@ -480,6 +480,7 @@ elif st.session_state.phase == "save_body":
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
+
 
 
 
