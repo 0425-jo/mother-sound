@@ -199,7 +199,7 @@ elif st.session_state.phase == "vowel_input":
             st.rerun()
 
     # ② 削除
-    if st.button("削除", use_container_width=True):
+    if st.button("⌫削除", use_container_width=True):
         if st.session_state.input_vowels:
             st.session_state.input_vowels = st.session_state.input_vowels[:-1]
             st.session_state.vowel_deletes += 1
@@ -328,7 +328,7 @@ elif st.session_state.phase == "body_vowel_input":
             st.rerun()
 
     # ② 削除
-    if st.button("削除", key="body_delete", use_container_width=True):
+    if st.button("⌫削除", key="body_delete", use_container_width=True):
         if st.session_state.body_input_vowels:
             st.session_state.body_input_vowels = st.session_state.body_input_vowels[:-1]
             st.session_state.body_vowel_deletes += 1
@@ -479,6 +479,7 @@ elif st.session_state.phase == "save_body":
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
+
 
 
 
