@@ -340,6 +340,7 @@ elif st.session_state.phase == "body_vowel_input":
     st.subheader(f"入力：{st.session_state.body_input_vowels}")
 
     # ④ 候補表示
+    body_word_dict = word_dict
     if st.session_state.body_input_vowels:
         candidates = []
         for r, j in body_word_dict.items():
@@ -479,6 +480,7 @@ elif st.session_state.phase == "save_body":
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
+
 
 
 
