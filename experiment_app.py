@@ -440,8 +440,8 @@ elif st.session_state.phase == "body_free_input":
 
 # =============================== 最終 保存 & リセット ===============================
 elif st.session_state.phase == "save_body":
-    st.success("すべて完了しました！")
-    st.write("ご協力ありがとうございました。\n最初に戻るを押してから終えてください！")
+    st.success("ありがとうございます！")
+    st.write("ご協力ありがとうございました。\n最後にアンケートに協力してください！")
     st.markdown("---")
     st.subheader("最後に、操作について教えてください")
     st.session_state.vowel_ui_eval = st.radio(
@@ -450,7 +450,7 @@ elif st.session_state.phase == "save_body":
         index=None
     )
 
-    if st.button("最初に戻る"):
+    if st.button("完了！"):
         if not st.session_state.vowel_ui_eval:
             st.warning("アンケートへの回答をお願いします")
         else:
@@ -491,6 +491,7 @@ elif st.session_state.phase == "save_body":
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
+
 
 
 
