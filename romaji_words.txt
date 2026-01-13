@@ -332,3 +332,4 @@ hieshou,冷え症
 kettouchiagatteiru,血糖値上がってる
 hinnketu,貧血
 maamaa,まあまあ
+iikannji,いい感じ
