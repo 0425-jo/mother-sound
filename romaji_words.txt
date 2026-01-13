@@ -318,6 +318,16 @@ shikkari,しっかり
 namakemono,なまけもの
 kanshin,関心
 bikkuri,びっくり
+nanimotabetakunai,何も食べたくない
+takosu,タコス
+gatturi,がっつり
+banana,バナナ
+yoi,良い
+kinnchou,緊張
+kaeritai,帰りたい
+kibii,きびい
+kaze,風邪
 kawaru,変わる
 hieshou,冷え症
 kettouchiagatteiru,血糖値上がってる
+hinnketu,貧血
